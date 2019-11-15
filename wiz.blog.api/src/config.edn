@@ -1,16 +1,16 @@
-{:ig/system
- {:wiz.blog.api.core/string "Hello, api!"
+{:web-server
+ {:port      #long #or [#env PORT 5757]
+  :host-name #join ["http" "://" "localhost"
+                    ":" #ref [:port]]}
 
-  :wiz.blog.api.core/fcom #ig/ref :wiz.blog.api.core/fcom-wrapped
-  :wiz.blog.api.core/fcom-wrapped {:origin [1 2 3]
-                                   :wrap-with ["###  " "  ###"]}
+ :ig/system
+ {:wiz.blog.api.core/string "Hello, api!"
 
   :edge.yada.ig/listener
   {:handler #ig/ref :edge.bidi.ig/vhost
-   :port    5757}
+   :port    #ref [:port]}
 
   :edge.bidi.ig/vhost
-  [["http://localhost:5757"
+  [[#ref [:web-server :host-name]
     [""
-     [["/" #ig/ref :wiz.blog.api.core/string]
-      ["/fcom" #ig/ref :wiz.blog.api.core/fcom]]]]]}}
+     [["/" #ig/ref :wiz.blog.api.core/string]]]]]}}
