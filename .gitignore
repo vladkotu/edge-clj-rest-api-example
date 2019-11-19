@@ -11,3 +11,4 @@
 
 **/.vscode
 **/.clj-kondo/.cache
+**/.env
