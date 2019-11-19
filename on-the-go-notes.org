@@ -1,0 +1,43 @@
+* Notes on the go
+excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
+
+** ENV
+   couldn't find a way to reuse environment variables in app config and
+   docker-compose mostly becsause clojure when running do not respect local env
+   variables setting local variables do not work neither by sourcing key val
+   pairs from .env file nor by using dotenv plugin for emacs (had hope cider
+   would catch them up)
+   sh -ac 'source .env && clojure -A:dev' - do not work as well
+   only thing is working - DB_USER=user clojure -A:dev - which obviously would
+   not work as at least 10 variables should be passed
+     - [!] pass host secrets to docker image and app form env
+   
+   Currently to configure things in a dev mode (mac os involved) 
+   We have to save copy of env vars in a .env file (it still works for docker-compose)
+   and inside aero confg (secrets.edn)
+   
+** DB
+*** up and running [85%]
+     - [X] create docker-compose file
+      [[file:wiz.blog.api/docker-compose.yml::version:%20"3"][docker-compose.yml]] 
+     - [X] run container
+       #+begin_src 
+         docker-compose up -d
+       #+end_src
+     - [X] test connection from terminal
+       #+begin_src 
+ psql -h localhost -p 54320 -U vladkotu -d blog_db
+       #+end_src
+     - [X] connect form app
+     - [X] create scheme
+     - [X] apply scheme
+**** [%] migrations
+*** check your data with pgadmin [0%]
+    - [ ] add dpage/pgadmin to docker compose
+    - [ ] connect to app db
+    - [ ] restrict pgadmin to start only in dev mode
+    
+** Quiz
+*** How to write to STDOUT but not only to logs?
+    do i need this at all?
+*** how to read config values inside application?
