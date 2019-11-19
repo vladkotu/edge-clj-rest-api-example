@@ -6,6 +6,7 @@
 ;; this should be removed in prod mode
 (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/authors.sql")
 
+;; primers mostly expired as of names have been changed
 (comment (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
 (comment (authors/insert-authors
           @db
@@ -33,4 +34,4 @@
 (comment
   (authors/get-all-authors @db))
 
-
+(clojure.pprint/pprint (select-all @db))
