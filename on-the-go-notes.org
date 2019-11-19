@@ -17,7 +17,7 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
    and inside aero confg (secrets.edn)
    
 ** DB
-*** up and running [85%]
+*** up and running [100%]
      - [X] create docker-compose file
       [[file:wiz.blog.api/docker-compose.yml::version:%20"3"][docker-compose.yml]] 
      - [X] run container
@@ -32,6 +32,8 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
      - [X] create scheme
      - [X] apply scheme
 **** [%] migrations
+     - [ ] what migration libs are exists?
+
 *** check your data with pgadmin [0%]
     - [ ] add dpage/pgadmin to docker compose
     - [ ] connect to app db
@@ -39,5 +41,5 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
     
 ** Quiz
 *** How to write to STDOUT but not only to logs?
-    do i need this at all?
+    seems like simple println works
 *** how to read config values inside application?
