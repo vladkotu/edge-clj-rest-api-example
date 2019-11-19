@@ -1,16 +1,26 @@
-{:web-server
- {:port      #long #or [#env PORT 5757]
-  :host-name #join ["http" "://" "localhost"
-                    ":" #ref [:port]]}
+{:web
+ {:port     #long #or [#env PORT 5757]
+  :protocol #or [#env PROTOCOL "http"]
+  :host     #or [#env HOST "localhost"]}
+
+ :db
+ {:dbtype   "postgresql"
+  :user     #or [#env DB_USER "vladkotu"]
+  :password #or [#env DB_PASSWORD "pwd123"]
+  :dbname   #or [#env DB_NAME "blog_db"]
+  :port     #long #or [#env DB_PORT 54320]
+  :host     #or [#env DB_HOST "localhost"]}
 
  :ig/system
- {:wiz.blog.api.core/string "Hello, api!"
+ {:wiz.blog.api.db/db-spec #ref [:db]
+
+  :wiz.blog.api.core/string "Hello, api!"
 
   :edge.yada.ig/listener
   {:handler #ig/ref :edge.bidi.ig/vhost
-   :port    #ref [:port]}
+   :port    #ref [:web :port]}
 
   :edge.bidi.ig/vhost
-  [[#ref [:web-server :host-name]
+  [[#join [#ref [:web :protocol] "://" #ref [:web :host] ":" #ref [:web :port]]
     [""
      [["/" #ig/ref :wiz.blog.api.core/string]]]]]}}
