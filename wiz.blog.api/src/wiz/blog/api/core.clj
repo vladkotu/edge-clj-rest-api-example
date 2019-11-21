@@ -39,14 +39,13 @@
      {:get
       {:response
        (fn [ctx]
-         (let [response (:response ctx)
-               book-id  (-> ctx :parameters :path :id)
-               data     (books/select-by-id db {:id (read-string book-id)})
-               result   (if (nil? data)
-                          (-> response
-                              (assoc :status 404)
-                              (assoc :body {:message "Not found"}))
-                          data)]
+         (let [id     (-> ctx :parameters :path :id)
+               data   (books/select-by-id db {:id (read-string id)})
+               result (if (nil? data)
+                        (-> (:response ctx)
+                            (assoc :status 404)
+                            (assoc :body {:message "Not found"}))
+                        data)]
            (case (yada/content-type ctx)
              "text/plain" (with-out-str (clojure.pprint/pprint result))
              result)))}}})))
@@ -72,14 +71,13 @@
      {:get
       {:response
        (fn [ctx]
-         (let [response (:response ctx)
-               book-id  (-> ctx :parameters :path :id)
-               data     (authors/select-by-id db {:id (read-string book-id)})
-               result   (if (nil? data)
-                          (-> response
-                              (assoc :status 404)
-                              (assoc :body {:message "Not found"}))
-                          data)]
+         (let [id     (-> ctx :parameters :path :id)
+               data   (authors/select-by-id db {:id (read-string id)})
+               result (if (nil? data)
+                        (-> (:response ctx)
+                            (assoc :status 404)
+                            (assoc :body {:message "Not found"}))
+                        data)]
            (case (yada/content-type ctx)
              "text/plain" (with-out-str (clojure.pprint/pprint result))
              result)))}}})))
