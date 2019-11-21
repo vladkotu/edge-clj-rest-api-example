@@ -199,9 +199,11 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
 
   #+RESULTS: get-book
   : {:id 1,
-  :  :title "Db Book of all Books",
-  :  :author_id 1,
-  :  :created_at #inst "2019-11-19T19:47:06.767703000-00:00"}
+  :  :name "Vlad",
+  :  :email "vald@kot.com",
+  :  :nickname "vladkotu",
+  :  :biography nil,
+  :  :created_at #inst "2019-11-19T12:15:28.084882000-00:00"}
 
 ***** single book not found
   #+NAME: not-found 
@@ -219,11 +221,11 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   X-Content-Type-Options: nosniff
   Content-Length: 23
   Content-Type: application/edn
-  Last-Modified: Thu, 21 Nov 2019 17:43:42 GMT
+  Last-Modified: Thu, 21 Nov 2019 17:59:40 GMT
   Vary: accept
   Server: Aleph/0.4.4
   Connection: Keep-Alive
-  Date: Thu, 21 Nov 2019 17:45:02 GMT
+  Date: Thu, 21 Nov 2019 17:59:57 GMT
   
   {:message "Not found"}
   #+end_example
@@ -243,14 +245,14 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
 ***** get whole author
   #+NAME: get-author
   #+BEGIN_SRC shell :results verbatim
-  curl -sv "$API/authors/2"
+  curl -sv "$API/authors/3"
   #+END_SRC
 
   #+RESULTS: get-author
-  : {:id 2,
-  :  :name "Ivan",
-  :  :email "ivan@ttt.com",
-  :  :nickname "ivanko",
+  : {:id 3,
+  :  :name "Svetlana",
+  :  :email "svet@ttt.com",
+  :  :nickname "svenlo",
   :  :biography nil,
   :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
 
@@ -269,11 +271,60 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   X-Content-Type-Options: nosniff
   Content-Length: 24
   Content-Type: application/json
-  Last-Modified: Thu, 21 Nov 2019 11:10:47 GMT
+  Last-Modified: Thu, 21 Nov 2019 18:00:25 GMT
   Vary: accept
   Server: Aleph/0.4.4
   Connection: Keep-Alive
-  Date: Thu, 21 Nov 2019 11:16:04 GMT
+  Date: Thu, 21 Nov 2019 18:00:48 GMT
+  
+  {"message":"Not found"}
+  #+end_example
+
+
+**** comments/
+***** get all comments
+  #+NAME: get-comments
+  #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
+  curl -sv "$API/comments" \
+       -H  "Accept: application/json"
+  #+END_SRC
+
+  #+RESULTS: get-comments
+  : [{"id":1,"message":"love books about dbs and this one especially"},{"id":2,"message":"mee too"},{"id":3,"message":"lets learn db"},{"id":4,"message":"who is psyho here?"},{"id":5,"message":"i feel pain - fix it"},{"id":6,"message":"much better name - stop it"}]
+
+***** get whole comment
+  #+NAME: get-comment
+  #+BEGIN_SRC shell :results verbatim
+  curl -sv "$API/comments/3"
+  #+END_SRC
+
+  #+RESULTS: get-comment
+  : {:id 3,
+  :  :message "lets learn db",
+  :  :author_id 3,
+  :  :book_id 1,
+  :  :created_at #inst "2019-11-19T20:20:42.790065000-00:00"}
+
+***** single comment not found
+  #+NAME: comment-not-found
+  #+BEGIN_SRC shell :results verbatim
+  curl -svi "$API/comments/0" \
+       -H   "Accept: application/json"
+  #+END_SRC
+
+  #+RESULTS: comment-not-found
+  #+begin_example
+  HTTP/1.1 404 Not Found
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Content-Length: 24
+  Content-Type: application/json
+  Last-Modified: Thu, 21 Nov 2019 18:00:25 GMT
+  Vary: accept
+  Server: Aleph/0.4.4
+  Connection: Keep-Alive
+  Date: Thu, 21 Nov 2019 18:12:41 GMT
   
   {"message":"Not found"}
   #+end_example

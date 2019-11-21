@@ -13,22 +13,25 @@
 
  :ig/system
  {:wiz.blog.api.db/db-spec #ref [:db]
-  :wiz.blog.api.core/root    "Hello, api!"
+  :wiz.blog.api.core/root  "Hello, api!"
 
   [:wiz.blog.api.core/items-list :blog.api/books]
-  {:wiz.blog.api.db/db-spec #ig/ref :wiz.blog.api.db/db-spec
-   :resource/options {:description "List of Books"}}
+  {:resource/options {:description "List of Books"}}
 
   [:wiz.blog.api.core/items-list :blog.api/authors]
-  {:wiz.blog.api.db/db-spec #ig/ref :wiz.blog.api.db/db-spec
-   :resource/options {:description "List of Authors"}}
+  {:resource/options {:description "List of Authors"}}
+
+  [:wiz.blog.api.core/items-list :blog.api/comments]
+  {:resource/options {:description "All comments"}}
 
   [:wiz.blog.api.core/item-blob :blog.api/book]
-  {:wiz.blog.api.db/db-spec #ig/ref :wiz.blog.api.db/db-spec
-   :resource/options {:description "All info about book"}}
+  {:resource/options {:description "All info about book"}}
 
   [:wiz.blog.api.core/item-blob :blog.api/author]
   {:resource/options {:description "All info about author"}}
+
+  [:wiz.blog.api.core/item-blob :blog.api/comment]
+  {:resource/options {:description "All info about comment"}}
 
   :wiz.blog.api.core/routes
   {:port     #ref [:web :port]
@@ -39,7 +42,9 @@
             ["books" #ig/ref :blog.api/books]
             [["books/" :id] #ig/ref :blog.api/book]
             ["authors" #ig/ref :blog.api/authors]
-            [["authors/" :id] #ig/ref :blog.api/author]]]]]]}
+            [["authors/" :id] #ig/ref :blog.api/author]
+            ["comments" #ig/ref :blog.api/comments]
+            [["comments/" :id] #ig/ref :blog.api/comment]]]]]]}
 
   :edge.yada.ig/listener
   {:handler #ig/ref :edge.bidi.ig/vhost

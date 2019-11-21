@@ -4,7 +4,8 @@
    [clojure.tools.logging :as log]
 
    [wiz.blog.api.db.books :as books]
-   [wiz.blog.api.db.authors :as authors]))
+   [wiz.blog.api.db.authors :as authors]
+   [wiz.blog.api.db.comments :as comments]))
 
 (def db-conn (atom nil))
 
@@ -16,19 +17,27 @@
 (defmulti select :entity)
 
 (defmethod select :books
-  [{:keys [db-spec]}]
-  (->> db-spec
+  [_]
+  (->> @db-conn
        books/select-all
        (sort-by :title)))
 
 (defmethod select :book
   [{:keys [id]}]
-  (authors/select-by-id @db-conn id))
+  (authors/select-by-id @db-conn {:id id}))
 
 (defmethod select :authors
-  [{:keys [db-spec]}]
-  (authors/select-all db-spec))
+  [_]
+  (authors/select-all @db-conn))
 
 (defmethod select :author
-  [{:keys [db-spec]}]
-  (authors/select-all db-spec))
+  [{:keys [id]}]
+  (authors/select-by-id @db-conn {:id id}))
+
+(defmethod select :comments
+  [_]
+  (comments/select-all @db-conn))
+
+(defmethod select :comment
+  [{:keys [id]}]
+  (comments/select-by-id @db-conn {:id id}))

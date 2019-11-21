@@ -34,7 +34,7 @@ update comments set
 where id = :id
 
 -- :name select-all :? :*
-SELECT * from comments order by created_at
+SELECT id, message from comments order by created_at
 
 -- :name select-by-id :? :1
 SELECT * FROM comments WHERE id = :id
