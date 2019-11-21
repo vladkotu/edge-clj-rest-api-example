@@ -30,12 +30,17 @@
      {:get
       {:response
        (fn [ctx]
-         (let [book-id (-> ctx :parameters :path :id)
-               result (if (nil? book-id) (books/select-all db)
-                          (books/select-by-id db {:id (read-string book-id)}))]
-           (case (yada/content-type ctx)
-             "text/plain" (with-out-str (clojure.pprint/pprint result))
-             result)))}}})))
+         (let [response (:response ctx)
+               book-id  (-> ctx :parameters :path :id)
+               result   (if (nil? book-id) (books/select-all db)
+                            (books/select-by-id db {:id (read-string book-id)}))]
+           (if (nil? result)
+             (-> response
+                 (assoc :status 404)
+                 (assoc :body {:message "Not found"}))
+             (case (yada/content-type ctx)
+               "text/plain" (with-out-str (clojure.pprint/pprint result))
+               result))))}}})))
 
 (defmethod ig/init-key ::books
   [_ db]

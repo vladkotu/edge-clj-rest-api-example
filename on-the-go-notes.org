@@ -19,246 +19,97 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
     :header-args: :var API="http://localhost:5757/v1"
     :END:
 
+**** endpoint debug dump
+ #+NAME: curl-version
+ #+begin_src sh
+   curl --version
+   which curl
+ #+end_src
 
-#+NAME: curl-version
-#+begin_src sh
-  curl --version
-  which curl
-#+end_src
+ #+begin_src sh :results verbatim
+   # curl --head "${API}/books"
+   # exec 2>&1
+   curl -vsi "${API}/books/22?q=1"  \
+        -H 'Connection: keep-alive' \
+        -H 'Accept: text/plain, application/edn;q=0.9'
+        # -H 'Content-type: application/edn' \
+        # -H "Accept-Charset: UTF-8"
+ #+end_src
 
-#+begin_src sh :results verbatim
-  # curl --head "${API}/books"
-  # exec 2>&1
-  curl -vsi "${API}/books/22?q=1" -H "fd"    \
-       -H 'Connection: keep-alive' \
-       -H 'Accept: text/plain, application/edn;q=0.9'
-       # -H 'Content-type: application/edn' \
-       # -H "Accept-Charset: UTF-8"
-#+end_src
+ #+RESULTS:
+ #+begin_example
+ HTTP/1.1 404 Not Found
+ X-Frame-Options: SAMEORIGIN
+ X-XSS-Protection: 1; mode=block
+ X-Content-Type-Options: nosniff
+ Content-Length: 24
+ Content-Type: text/plain
+ Last-Modified: Thu, 21 Nov 2019 10:32:07 GMT
+ Vary: accept
+ Server: Aleph/0.4.4
+ Connection: Keep-Alive
+ Date: Thu, 21 Nov 2019 10:37:07 GMT
+ 
+ {:message "Not found"}
 
-#+RESULTS:
-#+begin_example
-HTTP/1.1 200 OK
-X-Frame-Options: SAMEORIGIN
-X-XSS-Protection: 1; mode=block
-X-Content-Type-Options: nosniff
-Content-Length: 1249
-Content-Type: text/plain
-Last-Modified: Thu, 21 Nov 2019 08:14:51 GMT
-Vary: accept
-Server: Aleph/0.4.4
-Connection: Keep-Alive
-Date: Thu, 21 Nov 2019 08:22:50 GMT
-
-{:db
- {:dbtype "postgresql",
-  :user "vladkotu",
-  :password "pwd123",
-  :dbname "blog_db",
-  :port 54320,
-  :host "localhost"},
- :parameters {:path {:id "22"}, :query {"q" "1"}},
- :yada-con "text/plain",
- :req
- {:aleph/request-arrived 492682368074878,
-  :aleph/keep-alive? true,
-  :remote-addr "0:0:0:0:0:0:0:1",
-  :params {:id "22"},
-  :route-params {:id "22"},
-  :headers
-  {"host" "localhost:5757",
-   "user-agent" "curl/7.64.1",
-   "connection" "keep-alive",
-   "accept" "text/plain, application/edn;q=0.9"},
-  :server-port 5757,
-  :uri "/v1/books/22",
-  :server-name "localhost",
-  :query-string "q=1",
-  :body
-  << stream: {:pending-puts 0, :drained? false, :buffer-size 0, :permanent? false, :type "netty", :sink? true, :closed? true, :pending-takes 0, :buffer-capacity 16384, :connection {:local-address "localhost/0:0:0:0:0:0:0:1:5757", :remote-address "/0:0:0:0:0:0:0:1:51598", :writable? true, :readable? true, :closed? false, :direction :inbound}, :source? true} >>,
-  :scheme :http,
-  :request-method :get},
- :res
- {:headers {},
-  :last-modified "Thu, 21 Nov 2019 08:14:51 GMT",
-  :vary #{:media-type},
-  :produces
-  {:media-type
-   {:name "text/plain",
-    :type "text",
-    :subtype "plain",
-    :parameters {},
-    :quality 1.0}}}}
-#+end_example
-
-#+NAME: get-books
-#+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-exec 2>&1
-curl -sv "$API/books"
-#+END_SRC
-
-#+RESULTS: get-books
-#+begin_example
-,*   Trying ::1...
-,* TCP_NODELAY set
-,* Connected to localhost (::1) port 5757 (#0)
-> GET /v1/books HTTP/1.1
-> Host: localhost:5757
-> User-Agent: curl/7.64.1
-> Accept: */*
-> 
-< HTTP/1.1 200 OK
-< X-Frame-Options: SAMEORIGIN
-< X-XSS-Protection: 1; mode=block
-< X-Content-Type-Options: nosniff
-< Content-Length: 4607
-< Content-Type: text/html
-< Last-Modified: Wed, 20 Nov 2019 15:32:00 GMT
-< Vary: accept
-< Server: Aleph/0.4.4
-< Connection: Keep-Alive
-< Date: Wed, 20 Nov 2019 16:41:11 GMT
-< 
-{ [4607 bytes data]
-,* Connection #0 to host localhost left intact
-{:response
- {:headers {},
-  :last-modified "Wed, 20 Nov 2019 15:32:00 GMT",
-  :vary #{:media-type},
-  :produces
-  {:media-type
-   {:name "text/html",
-    :type "text",
-    :subtype "html",
-    :parameters {},
-    :quality 1.0}}},
- :properties {:last-modified #inst "2019-11-20T15:32:00.747-00:00"},
- :request
- {:aleph/request-arrived 441005045430802,
-  :aleph/keep-alive? true,
-  :remote-addr "0:0:0:0:0:0:0:1",
-  :params nil,
-  :route-params nil,
-  :headers
-  {"host" "localhost:5757",
-   "user-agent" "curl/7.64.1",
-   "accept" "*/*"},
-  :server-port 5757,
-  :uri "/v1/books",
-  :server-name "localhost",
-  :query-string nil,
-  :body
-  << stream: {:pending-puts 0, :drained? false, :buffer-size 0, :permanent? false, :type "netty", :sink? true, :closed? true, :pending-takes 0, :buffer-capacity 16384, :connection {:local-address "localhost/0:0:0:0:0:0:0:1:5757", :remote-address "/0:0:0:0:0:0:0:1:60557", :writable? true, :readable? true, :closed? false, :direction :inbound}, :source? true} >>,
-  :scheme :http,
-  :request-method :get},
- :request-id #uuid "5fb9551e-f485-4961-8984-10e9cebbc6a7",
- :method :get,
- :authorization true,
- :cookies {},
- :known-methods
- {:*
-  #object[yada.methods.AnyMethod 0x6d353509 "yada.methods.AnyMethod@6d353509"],
-  :head
-  #object[yada.methods.HeadMethod 0x2e77b601 "yada.methods.HeadMethod@2e77b601"],
-  :get
-  #object[yada.methods.GetMethod 0x44f66753 "yada.methods.GetMethod@44f66753"],
-  :put
-  #object[yada.methods.PutMethod 0x3808a77a "yada.methods.PutMethod@3808a77a"],
-  :post
-  #object[yada.methods.PostMethod 0x720ac9c3 "yada.methods.PostMethod@720ac9c3"],
-  :delete
-  #object[yada.methods.DeleteMethod 0x39f75ec6 "yada.methods.DeleteMethod@39f75ec6"],
-  :options
-  #object[yada.methods.OptionsMethod 0x61b7f22a "yada.methods.OptionsMethod@61b7f22a"],
-  :trace
-  #object[yada.methods.TraceMethod 0x55098fb6 "yada.methods.TraceMethod@55098fb6"]},
- :produces
- ({:media-type
-   {:name "application/json",
-    :type "application",
-    :subtype "json",
-    :parameters {},
-    :quality 0.9}}
-  {:media-type
-   {:name "application/edn",
-    :type "application",
-    :subtype "edn",
-    :parameters {},
-    :quality 0.9}}
-  {:media-type
-   {:name "text/html",
-    :type "text",
-    :subtype "html",
-    :parameters {},
-    :quality 1.0}}),
- :interceptor-chain
- [#function[yada.interceptors/available?]
-  #function[yada.interceptors/known-method?]
-  #function[yada.interceptors/uri-too-long?]
-  #function[yada.interceptors/TRACE]
-  #function[yada.interceptors/method-allowed?]
-  #function[yada.swagger-parameters/parse-parameters]
-  #function[yada.interceptors/capture-proxy-headers]
-  #function[yada.cookies/consume-cookies]
-  #function[yada.security/authenticate]
-  #function[yada.interceptors/get-properties]
-  #function[yada.security/authorize]
-  #function[yada.interceptors/process-content-encoding]
-  #function[yada.interceptors/process-request-body]
-  #function[yada.interceptors/check-modification-time]
-  #function[yada.interceptors/select-representation]
-  #function[yada.interceptors/if-match]
-  #function[yada.interceptors/if-none-match]
-  #function[yada.interceptors/invoke-method]
-  #function[yada.interceptors/get-new-properties]
-  #function[yada.interceptors/compute-etag]
-  #function[yada.security/access-control-headers]
-  #function[yada.security/security-headers]
-  #function[yada.interceptors/create-response]
-  #function[yada.interceptors/logging]
-  #function[yada.interceptors/return]],
- :uri-info #function[bidi.vhosts/find-handler/fn--24608/fn--24616],
- :allowed-methods #{:get :head :options},
- :method-wrapper
- #object[yada.methods.GetMethod 0x44f66753 "yada.methods.GetMethod@44f66753"],
- :yada.context/cache #<Atom@22c27f97: {}>,
- :id :wiz.blog.api.core/books,
- :resource
- {:produces
-  [{:media-type
-    {:name "application/json",
-     :type "application",
-     :subtype "json",
-     :parameters {},
-     :quality 0.9}}
-   {:media-type
-    {:name "application/edn",
-     :type "application",
-     :subtype "edn",
-     :parameters {},
-     :quality 0.9}}
-   {:media-type
-    {:name "text/html",
-     :type "text",
-     :subtype "html",
-     :parameters {},
-     :quality 1.0}}],
-  :properties {:last-modified #inst "2019-11-20T15:32:00.747-00:00"},
-  :id :wiz.blog.api.core/books,
-  :description "List of Books",
-  :methods
-  {:get {:response #function[wiz.blog.api.core/books/fn--58503]}},
-  :show-stack-traces? true},
- :error-interceptor-chain
- [#function[yada.security/access-control-headers]
-  #function[yada.interceptors/create-response]
-  #function[yada.interceptors/logging]
-  #function[yada.interceptors/return]],
- :parameters {}}
-,* Closing connection 0
-#+end_example
+ #+end_example
 
 
+
+**** books/
+ 
+***** get all books   
+  #+NAME: get-books
+  #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
+  curl -sv "$API/books"
+  #+END_SRC
+
+  #+RESULTS: get-books
+  : ({:id 1, :title "Db Book of all Books"}
+  :  {:id 2, :title "Psyho Self control"}
+  :  {:id 3, :title "RDBMS coockbook"}
+  :  {:id 4, :title "Event logigns in s UI systems"}
+  :  {:id 5, :title "Awareness"})
+
+***** get whole book
+  #+NAME: get-book 
+  #+begin_src sh :results verbatim
+    # exec 2>&1
+    curl -vs "${API}/books/1" \
+         -H 'Accept: text/plain, application/edn;q=0.9'
+  #+end_src
+
+  #+RESULTS: get-book
+  : {:id 1,
+  :  :title "Db Book of all Books",
+  :  :author_id 1,
+  :  :created_at #inst "2019-11-19T19:47:06.767703000-00:00"}
+
+***** single book not found
+  #+NAME: not-found 
+  #+begin_src sh :results verbatim
+    # exec 2>&1
+    curl -vsi "${API}/books/0" \
+         -H 'Accept: text/plain, application/edn;q=0.9'
+  #+end_src
+
+  #+RESULTS: not-found
+  #+begin_example
+  HTTP/1.1 404 Not Found
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Content-Length: 24
+  Content-Type: text/plain
+  Last-Modified: Thu, 21 Nov 2019 10:32:07 GMT
+  Vary: accept
+  Server: Aleph/0.4.4
+  Connection: Keep-Alive
+  Date: Thu, 21 Nov 2019 10:38:20 GMT
+ 
+  {:message "Not found"}
+
+  #+end_example
 
 ** ENV
    couldn't find a way to reuse environment variables in app config and
