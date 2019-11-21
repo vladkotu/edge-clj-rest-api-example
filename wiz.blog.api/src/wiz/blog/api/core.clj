@@ -22,9 +22,9 @@
     opts
     {:id         ::books
      :produces   [{:media-type
-                   #{"text/plain"
-                     "application/edn;q=0.9"
-                     "application/json;q=0.9"}}]
+                   #{"text/plain;q=0.9"
+                     "application/edn;q=0.7"
+                     "application/json;q=0.8"}}]
      :properties {:last-modified (new java.util.Date)}
      :methods
      {:get
