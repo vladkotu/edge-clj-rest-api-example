@@ -42,18 +42,25 @@ HTTP/1.1 200 OK
 X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Length: 1120
+Content-Length: 1249
 Content-Type: text/plain
-Last-Modified: Wed, 20 Nov 2019 18:21:08 GMT
+Last-Modified: Thu, 21 Nov 2019 08:14:51 GMT
 Vary: accept
 Server: Aleph/0.4.4
 Connection: Keep-Alive
-Date: Wed, 20 Nov 2019 18:22:05 GMT
+Date: Thu, 21 Nov 2019 08:22:50 GMT
 
-{:parameters {:path {:id "22"}, :query {"q" "1"}},
+{:db
+ {:dbtype "postgresql",
+  :user "vladkotu",
+  :password "pwd123",
+  :dbname "blog_db",
+  :port 54320,
+  :host "localhost"},
+ :parameters {:path {:id "22"}, :query {"q" "1"}},
  :yada-con "text/plain",
  :req
- {:aleph/request-arrived 447058635288781,
+ {:aleph/request-arrived 492682368074878,
   :aleph/keep-alive? true,
   :remote-addr "0:0:0:0:0:0:0:1",
   :params {:id "22"},
@@ -68,12 +75,12 @@ Date: Wed, 20 Nov 2019 18:22:05 GMT
   :server-name "localhost",
   :query-string "q=1",
   :body
-  << stream: {:pending-puts 0, :drained? false, :buffer-size 0, :permanent? false, :type "netty", :sink? true, :closed? true, :pending-takes 0, :buffer-capacity 16384, :connection {:local-address "localhost/0:0:0:0:0:0:0:1:5757", :remote-address "/0:0:0:0:0:0:0:1:61488", :writable? true, :readable? true, :closed? false, :direction :inbound}, :source? true} >>,
+  << stream: {:pending-puts 0, :drained? false, :buffer-size 0, :permanent? false, :type "netty", :sink? true, :closed? true, :pending-takes 0, :buffer-capacity 16384, :connection {:local-address "localhost/0:0:0:0:0:0:0:1:5757", :remote-address "/0:0:0:0:0:0:0:1:51598", :writable? true, :readable? true, :closed? false, :direction :inbound}, :source? true} >>,
   :scheme :http,
   :request-method :get},
  :res
  {:headers {},
-  :last-modified "Wed, 20 Nov 2019 18:21:08 GMT",
+  :last-modified "Thu, 21 Nov 2019 08:14:51 GMT",
   :vary #{:media-type},
   :produces
   {:media-type
