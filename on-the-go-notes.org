@@ -229,6 +229,56 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
 
   #+end_example
 
+**** authors/
+***** get all authors
+  #+NAME: get-authors
+  #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
+  curl -sv "$API/authors"
+  #+END_SRC
+
+  #+RESULTS: get-authors
+  : ({:id 1, :name "Vlad", :nickname "vladkotu", :email "vald@kot.com"}
+  :  {:id 2, :name "Ivan", :nickname "ivanko", :email "ivan@ttt.com"}
+  :  {:id 3, :name "Svetlana", :nickname "svenlo", :email "svet@ttt.com"})
+
+***** get whole author
+  #+NAME: get-author
+  #+BEGIN_SRC shell :results verbatim
+  curl -sv "$API/authors/2"
+  #+END_SRC
+
+  #+RESULTS: get-author
+  : {:id 2,
+  :  :name "Ivan",
+  :  :email "ivan@ttt.com",
+  :  :nickname "ivanko",
+  :  :biography nil,
+  :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
+
+***** single author not found
+  #+NAME: author-not-found
+  #+BEGIN_SRC shell :results verbatim
+  curl -svi "$API/authors/0" \
+       -H   "Accept: application/json"
+  #+END_SRC
+
+  #+RESULTS: author-not-found
+  #+begin_example
+  HTTP/1.1 404 Not Found
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Content-Length: 24
+  Content-Type: application/json
+  Last-Modified: Thu, 21 Nov 2019 11:10:47 GMT
+  Vary: accept
+  Server: Aleph/0.4.4
+  Connection: Keep-Alive
+  Date: Thu, 21 Nov 2019 11:16:04 GMT
+  
+  {"message":"Not found"}
+  #+end_example
+
 ** ENV
    couldn't find a way to reuse environment variables in app config and
    docker-compose mostly becsause clojure when running do not respect local env

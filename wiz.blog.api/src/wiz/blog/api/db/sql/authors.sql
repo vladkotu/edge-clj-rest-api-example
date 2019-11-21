@@ -35,7 +35,7 @@ update authors set
 where id = :id
 
 -- :name select-all :? :*
-SELECT * from authors order by created_at
+SELECT id, name, nickname, email from authors order by created_at
 
 -- :name select-by-email :? :1
 SELECT * FROM authors WHERE email = :email
