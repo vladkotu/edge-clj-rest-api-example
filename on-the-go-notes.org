@@ -19,45 +19,163 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
     :header-args: :var API="http://localhost:5757/v1"
     :END:
 
-**** endpoint debug dump
- #+NAME: curl-version
- #+begin_src sh
-   curl --version
-   which curl
- #+end_src
-
- #+begin_src sh :results verbatim
-   # curl --head "${API}/books"
-   # exec 2>&1
-   curl -vsi "${API}/books/22?q=1"  \
-        -H 'Connection: keep-alive' \
-        -H 'Accept: text/plain, application/edn;q=0.9'
-        # -H 'Content-type: application/edn' \
-        # -H "Accept-Charset: UTF-8"
- #+end_src
-
- #+RESULTS:
- #+begin_example
- HTTP/1.1 404 Not Found
- X-Frame-Options: SAMEORIGIN
- X-XSS-Protection: 1; mode=block
- X-Content-Type-Options: nosniff
- Content-Length: 24
- Content-Type: text/plain
- Last-Modified: Thu, 21 Nov 2019 10:32:07 GMT
- Vary: accept
- Server: Aleph/0.4.4
- Connection: Keep-Alive
- Date: Thu, 21 Nov 2019 10:37:07 GMT
- 
- {:message "Not found"}
-
- #+end_example
-
-
 
 **** books/
  
+***** ctx obj dump
+#+begin_src clojure
+{:response
+ {:headers {},
+  :last-modified "Thu, 21 Nov 2019 10:51:46 GMT",
+  :vary #{:media-type},
+  :produces
+  {:media-type
+   {:name "text/plain",
+    :type "text",
+    :subtype "plain",
+    :parameters {},
+    :quality 0.9}}},
+ :properties {:last-modified #inst "2019-11-21T10:51:46.108-00:00"},
+ :request
+ {:aleph/request-arrived 501626754028580,
+  :aleph/keep-alive? true,
+  :remote-addr "0:0:0:0:0:0:0:1",
+  :params {:id "2"},
+  :route-params {:id "2"},
+  :headers
+  {"sec-fetch-site" "none",
+   "host" "localhost:5757",
+   "user-agent"
+   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36",
+   "cookie"
+   "ring-session=4fff676a-286b-44e0-a6fb-3bfb7895f513; secret=e7fd2da7-73fc-4470-bc54-afe6552ba817; PGADMIN_LANGUAGE=en",
+   "sec-fetch-user" "?1",
+   "connection" "keep-alive",
+   "upgrade-insecure-requests" "1",
+   "pragma" "no-cache",
+   "accept"
+   "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+   "accept-language" "en-US,en;q=0.9,ru-UA;q=0.8,ru;q=0.7",
+   "accept-encoding" "gzip, deflate, br",
+   "sec-fetch-mode" "navigate",
+   "cache-control" "no-cache"},
+  :server-port 5757,
+  :uri "/v1/books/2",
+  :server-name "localhost",
+  :query-string nil,
+  :body
+  << stream: {:pending-puts 0, :drained? false, :buffer-size 0, :permanent? false, :type "netty", :sink? true, :closed? true, :pending-takes 0, :buffer-capacity 16384, :connection {:local-address "localhost/0:0:0:0:0:0:0:1:5757", :remote-address "/0:0:0:0:0:0:0:1:65400", :writable? true, :readable? true, :closed? false, :direction :inbound}, :source? true} >>,
+  :scheme :http,
+  :request-method :get},
+ :request-id #uuid "5f265c3a-1ded-49a4-8c02-31dc8060b09a",
+ :method :get,
+ :authorization true,
+ :cookies
+ {"ring-session" "4fff676a-286b-44e0-a6fb-3bfb7895f513",
+  "secret" "e7fd2da7-73fc-4470-bc54-afe6552ba817",
+  "PGADMIN_LANGUAGE" "en"},
+ :known-methods
+ {:*
+  #object[yada.methods.AnyMethod 0x51876e58 "yada.methods.AnyMethod@51876e58"],
+  :head
+  #object[yada.methods.HeadMethod 0x6e5e4e29 "yada.methods.HeadMethod@6e5e4e29"],
+  :get
+  #object[yada.methods.GetMethod 0x6512bc2b "yada.methods.GetMethod@6512bc2b"],
+  :put
+  #object[yada.methods.PutMethod 0x81501a5 "yada.methods.PutMethod@81501a5"],
+  :post
+  #object[yada.methods.PostMethod 0x217afd82 "yada.methods.PostMethod@217afd82"],
+  :delete
+  #object[yada.methods.DeleteMethod 0x4c4f5309 "yada.methods.DeleteMethod@4c4f5309"],
+  :options
+  #object[yada.methods.OptionsMethod 0x2108791b "yada.methods.OptionsMethod@2108791b"],
+  :trace
+  #object[yada.methods.TraceMethod 0x10b22907 "yada.methods.TraceMethod@10b22907"]},
+ :produces
+ ({:media-type
+   {:name "application/edn",
+    :type "application",
+    :subtype "edn",
+    :parameters {},
+    :quality 0.7}}
+  {:media-type
+   {:name "application/json",
+    :type "application",
+    :subtype "json",
+    :parameters {},
+    :quality 0.8}}
+  {:media-type
+   {:name "text/plain",
+    :type "text",
+    :subtype "plain",
+    :parameters {},
+    :quality 0.9}}),
+ :interceptor-chain
+ [#function[yada.interceptors/available?]
+  #function[yada.interceptors/known-method?]
+  #function[yada.interceptors/uri-too-long?]
+  #function[yada.interceptors/TRACE]
+  #function[yada.interceptors/method-allowed?]
+  #function[yada.swagger-parameters/parse-parameters]
+  #function[yada.interceptors/capture-proxy-headers]
+  #function[yada.cookies/consume-cookies]
+  #function[yada.security/authenticate]
+  #function[yada.interceptors/get-properties]
+  #function[yada.security/authorize]
+  #function[yada.interceptors/process-content-encoding]
+  #function[yada.interceptors/process-request-body]
+  #function[yada.interceptors/check-modification-time]
+  #function[yada.interceptors/select-representation]
+  #function[yada.interceptors/if-match]
+  #function[yada.interceptors/if-none-match]
+  #function[yada.interceptors/invoke-method]
+  #function[yada.interceptors/get-new-properties]
+  #function[yada.interceptors/compute-etag]
+  #function[yada.security/access-control-headers]
+  #function[yada.security/security-headers]
+  #function[yada.interceptors/create-response]
+  #function[yada.interceptors/logging]
+  #function[yada.interceptors/return]],
+ :uri-info #function[bidi.vhosts/find-handler/fn--24608/fn--24616],
+ :allowed-methods #{:get :head :options},
+ :route-params {:id "2"},
+ :method-wrapper
+ #object[yada.methods.GetMethod 0x6512bc2b "yada.methods.GetMethod@6512bc2b"],
+ :yada.context/cache #<Atom@63302a44: {}>,
+ :id :wiz.blog.api.core/books,
+ :resource
+ {:produces
+  [{:media-type
+    {:name "application/edn",
+     :type "application",
+     :subtype "edn",
+     :parameters {},
+     :quality 0.7}}
+   {:media-type
+    {:name "application/json",
+     :type "application",
+     :subtype "json",
+     :parameters {},
+     :quality 0.8}}
+   {:media-type
+    {:name "text/plain",
+     :type "text",
+     :subtype "plain",
+     :parameters {},
+     :quality 0.9}}],
+  :properties {:last-modified #inst "2019-11-21T10:51:46.108-00:00"},
+  :id :wiz.blog.api.core/books,
+  :description "Full book info",
+  :methods
+  {:get {:response #function[wiz.blog.api.core/books/fn--62859]}},
+  :show-stack-traces? true},
+ :error-interceptor-chain
+ [#function[yada.security/access-control-headers]
+  #function[yada.interceptors/create-response]
+  #function[yada.interceptors/logging]
+  #function[yada.interceptors/return]],
+ :parameters {:path {:id "2"}}}
+#+end_src      
 ***** get all books   
   #+NAME: get-books
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no

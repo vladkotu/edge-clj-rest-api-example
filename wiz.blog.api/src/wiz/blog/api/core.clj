@@ -7,6 +7,7 @@
    [integrant.core :as ig]))
 
 (defn pps [x] (with-out-str (clojure.pprint/pprint x)))
+(defn pp [x] (clojure.pprint/pprint x))
 
 (defn string-resource
   [x]
@@ -20,35 +21,55 @@
   (yada/resource
    (merge
     opts
-    {:id         ::books
-     :produces   [{:media-type
-                   #{"text/plain;q=0.9"
-                     "application/edn;q=0.7"
-                     "application/json;q=0.8"}}]
-     :properties {:last-modified (new java.util.Date)}
-     :methods
+    {:methods
+     {:get
+      {:response
+       (fn [ctx]
+         (let [result (books/select-all db)]
+           (case (yada/content-type ctx)
+             "text/plain" (with-out-str (clojure.pprint/pprint result))
+             result)))}}})))
+
+(defn book [opts db]
+  (yada/resource
+   (merge
+    opts
+    {:methods
      {:get
       {:response
        (fn [ctx]
          (let [response (:response ctx)
                book-id  (-> ctx :parameters :path :id)
-               result   (if (nil? book-id) (books/select-all db)
-                            (books/select-by-id db {:id (read-string book-id)}))]
-           (if (nil? result)
-             (-> response
-                 (assoc :status 404)
-                 (assoc :body {:message "Not found"}))
-             (case (yada/content-type ctx)
-               "text/plain" (with-out-str (clojure.pprint/pprint result))
-               result))))}}})))
+               data (books/select-by-id db {:id (read-string book-id)})
+               result (if (nil? data)
+                        (-> response
+                            (assoc :status 404)
+                            (assoc :body {:message "Not found"}))
+                        data)]
+           (case (yada/content-type ctx)
+             "text/plain" (with-out-str (clojure.pprint/pprint result))
+             result)))}}})))
+
+(defn defaults [opts]
+  (merge
+   {:produces   [{:media-type
+                  #{"text/plain;q=0.9"
+                    "application/edn;q=0.7"
+                    "application/json;q=0.8"}}]
+    :properties {:last-modified (new java.util.Date)}}
+   opts))
 
 (defmethod ig/init-key ::books
   [_ db]
-  (books {:description "List of Books"} db))
+  (-> {:id ::books :description "List of Books"}
+      (defaults)
+      (books db)))
 
 (defmethod ig/init-key ::book
   [_ db]
-  (books {:description "Full book info"} db))
+  (-> {:id ::book :description "Full book info"}
+      (defaults)
+      (book db)))
 
 (defmethod ig/init-key ::routes
   [_ {:keys [routes port basePath]}]
