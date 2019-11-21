@@ -34,4 +34,3 @@
 (comment
   (authors/get-all-authors @db))
 
-(clojure.pprint/pprint (select-all @db))

@@ -14,7 +14,18 @@
  :ig/system
  {:wiz.blog.api.db/db-spec #ref [:db]
 
-  :wiz.blog.api.core/string "Hello, api!"
+  :wiz.blog.api.core/root  "Hello, api!"
+  :wiz.blog.api.core/books #ig/ref :wiz.blog.api.db/db-spec
+  :wiz.blog.api.core/book #ig/ref :wiz.blog.api.db/db-spec
+
+  :wiz.blog.api.core/routes
+  {:port #ref [:web :port]
+   :basePath "v1/"
+   :routes
+   [["v1"
+     [["/" [["" #ig/ref :wiz.blog.api.core/root]
+            ["books" #ig/ref :wiz.blog.api.core/books]
+            [["books/" :id] #ig/ref :wiz.blog.api.core/book]]]]]]}
 
   :edge.yada.ig/listener
   {:handler #ig/ref :edge.bidi.ig/vhost
@@ -22,5 +33,4 @@
 
   :edge.bidi.ig/vhost
   [[#join [#ref [:web :protocol] "://" #ref [:web :host] ":" #ref [:web :port]]
-    [""
-     [["/" #ig/ref :wiz.blog.api.core/string]]]]]}}
+    ["/" #ig/ref :wiz.blog.api.core/routes]]]}}
