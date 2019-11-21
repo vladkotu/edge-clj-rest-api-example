@@ -3,6 +3,7 @@
    [clojure.tools.logging :as log]
    [yada.yada :as yada]
    [yada.swagger :as swagger]
+   [wiz.blog.api.db.books :as books]
    [integrant.core :as ig]))
 
 (defn pps [x] (with-out-str (clojure.pprint/pprint x)))
@@ -19,23 +20,22 @@
   (yada/resource
    (merge
     opts
-    {:id          ::books
-     :produces    [{:media-type
-                    #{"text/plain"
-                      "application/edn;q=0.9"
-                      "application/json;q=0.9"}}]
-     :properties  {:last-modified (new java.util.Date)}
+    {:id         ::books
+     :produces   [{:media-type
+                   #{"text/plain"
+                     "application/edn;q=0.9"
+                     "application/json;q=0.9"}}]
+     :properties {:last-modified (new java.util.Date)}
      :methods
      {:get
       {:response
-       (fn [ctx] (let [rq     (->> [:request] (get-in ctx))
-                       rs     (->> [:response] (get-in ctx))
-                       ps     (->> [:parameters] (get-in ctx))
-                       result {:db db :parameters ps :yada-con (yada/content-type ctx) :req rq :res rs}]
-                         ;; (with-out-str (clojure.pprint/pprint {:yada-con (yada/content-type ctx) :req rq :res rs}))
-                   (case (yada/content-type ctx)
-                     "text/plain" (with-out-str (clojure.pprint/pprint result))
-                     result)))}}})))
+       (fn [ctx]
+         (let [book-id (-> ctx :parameters :path :id)
+               result (if (nil? book-id) (books/select-all db)
+                          (books/select-by-id db {:id (read-string book-id)}))]
+           (case (yada/content-type ctx)
+             "text/plain" (with-out-str (clojure.pprint/pprint result))
+             result)))}}})))
 
 (defmethod ig/init-key ::books
   [_ db]
