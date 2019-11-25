@@ -36,7 +36,7 @@ where id = :id
 SELECT id, title
 FROM books
 --~ (when (:author params) "WHERE author_id=:author")
---~ (if (:order params) "ORDER BY :order" "ORDER BY created_at")
+--~ (if (:order params) "ORDER BY :i:order" "ORDER BY created_at")
 --~ (when (:limit params) "LIMIT :limit")
 
 

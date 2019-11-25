@@ -37,7 +37,7 @@ where id = :id
 -- :name select-all :? :*
 SELECT id, name, nickname, email
 FROM authors
---~ (if (:order params) "ORDER BY :order" "ORDER BY created_at")
+--~ (if (:order params) "ORDER BY :i:order" "ORDER BY created_at")
 --~ (when (:limit params) "LIMIT :limit")
 
 -- :name select-by-email :? :1

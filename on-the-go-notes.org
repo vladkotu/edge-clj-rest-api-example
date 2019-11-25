@@ -17,7 +17,6 @@
     :header-args: :var API="http://localhost:5757/v1"
     :END:
 
-
 **** books/
  
 ***** ctx obj dump
@@ -181,9 +180,9 @@
   #+END_SRC
 
   #+RESULTS: get-books
-  : ({:id 1, :title "Db Book of all Books"}
-  :  {:id 2, :title "Psyho Self control"}
-  :  {:id 3, :title "RDBMS coockbook"})
+  : ({:id 5, :title "Awareness"}
+  :  {:id 1, :title "Db Book of all Books"}
+  :  {:id 4, :title "Event logigns in s UI systems"})
 ***** bool: books/{id} 
 ****** get book
    #+NAME: get-book 
@@ -230,7 +229,7 @@
 ***** get all authors
   #+NAME: get-authors
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-  curl -sv "$API/authors?limit=2&order=nickname"
+  curl -sv "$API/authors?limit=3&order=email|ASC"
   #+END_SRC
 
   #+RESULTS: get-authors
@@ -363,6 +362,53 @@
     - [ ] connect to app db
     - [ ] restrict pgadmin to start only in dev mode
     
+*** queries
+
+**** investigate bug with order being not applied dynamically
+ #+name: my-query
+ #+header: :engine postgresql
+ #+header: :dbhost localhost
+ #+header: :dbport 54320
+ #+header: :dbuser vladkotu
+ #+header: :dbpassword pwd123
+ #+header: :database blog_db
+ #+begin_src sql
+   SELECT id, message FROM comments
+   ORDER BY id DESC
+ #+end_src
+
+ #+RESULTS: my-query
+ | id | message                                      |
+ |----+----------------------------------------------|
+ |  6 | much better name - stop it                   |
+ |  5 | i feel pain - fix it                         |
+ |  4 | who is psyho here?                           |
+ |  3 | lets learn db                                |
+ |  2 | mee too                                      |
+ |  1 | love books about dbs and this one especially |
+
+ #+begin_src clojure :results pp
+   (def db {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})
+   (require '[hugsql.core :as hugsql])
+
+   (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/comments.sql")
+   (hugsql/def-db-fns "wiz/blog/api/db/sql/comments.sql")
+
+   {:sql (wiz.blog.api.db.comments/select-all-sqlvec {:order "id"})
+    :res (wiz.blog.api.db.comments/select-all db {:order "id"})}
+ #+end_src
+
+ #+RESULTS:
+ : {:sql ["SELECT id, message\nFROM comments\n\n\nORDER BY id DESC"],
+ :  :res
+ :  ({:id 6, :message "much better name - stop it"}
+ :   {:id 5, :message "i feel pain - fix it"}
+ :   {:id 4, :message "who is psyho here?"}
+ :   {:id 3, :message "lets learn db"}
+ :   {:id 2, :message "mee too"}
+ :   {:id 1, :message "love books about dbs and this one especially"})}
+
+
 ** Quiz
 *** How to write to STDOUT but not only to logs?
     seems like simple println works

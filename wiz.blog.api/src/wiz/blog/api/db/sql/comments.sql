@@ -38,7 +38,7 @@ SELECT id, message
 FROM comments
 --~ (when (:author params) "WHERE author_id=:author")
 --~ (when (:book params) (if (:author params)  "AND book_id=:book"  "WHERE book_id=:book"))
---~ (if (:order params) "ORDER BY :order DESC" "ORDER BY created_at")
+--~ (if (:order params) "ORDER BY :i:order DESC" "ORDER BY created_at")
 --~ (when (:limit params) "LIMIT :limit")
 
 -- :name select-by-id :? :1
