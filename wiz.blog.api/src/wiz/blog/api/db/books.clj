@@ -6,11 +6,11 @@
 ;; this should be removed in prod mode
 (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/books.sql")
 
-(comment
+(do
   (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
-(comment
-  (let [query {:author 1}]
-    (select-all @db query)))
+(do
+  (let [query {:limit 1}]
+    (select-all-sqlvec query)))
 (comment
   (create-table @db)
   (insert-list-entities @db {:books [["Db Book of all Books" 1]

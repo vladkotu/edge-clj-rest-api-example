@@ -34,7 +34,12 @@ update comments set
 where id = :id
 
 -- :name select-all :? :*
-SELECT id, message from comments order by created_at
+SELECT id, message
+FROM comments
+--~ (when (:author params) "WHERE author_id=:author")
+--~ (when (:book params) (if (:author params)  "AND book_id=:book"  "WHERE book_id=:book"))
+--~ (if (:order params) "ORDER BY :order DESC" "ORDER BY created_at")
+--~ (when (:limit params) "LIMIT :limit")
 
 -- :name select-by-id :? :1
 SELECT * FROM comments WHERE id = :id

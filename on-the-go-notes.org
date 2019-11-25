@@ -177,31 +177,29 @@
 ***** get all books   
   #+NAME: get-books
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-  curl -sv "$API/books"
+  curl -sv "$API/books?limit=3&order=title"
   #+END_SRC
 
   #+RESULTS: get-books
   : ({:id 1, :title "Db Book of all Books"}
   :  {:id 2, :title "Psyho Self control"}
-  :  {:id 3, :title "RDBMS coockbook"}
-  :  {:id 4, :title "Event logigns in s UI systems"}
-  :  {:id 5, :title "Awareness"})
+  :  {:id 3, :title "RDBMS coockbook"})
+***** bool: books/{id} 
+****** get book
+   #+NAME: get-book 
+   #+begin_src sh :results verbatim
+     # exec 2>&1
+     curl -vs "${API}/books/2" \
+          -H 'Accept: text/plain, application/edn;q=0.9'
+   #+end_src
 
-***** get whole book
-  #+NAME: get-book 
-  #+begin_src sh :results verbatim
-    # exec 2>&1
-    curl -vs "${API}/books/2" \
-         -H 'Accept: text/plain, application/edn;q=0.9'
-  #+end_src
-
-  #+RESULTS: get-book
-  : {:id 2,
-  :  :name "Ivan",
-  :  :email "ivan@ttt.com",
-  :  :nickname "ivanko",
-  :  :biography nil,
-  :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
+   #+RESULTS: get-book
+   : {:id 2,
+   :  :name "Ivan",
+   :  :email "ivan@ttt.com",
+   :  :nickname "ivanko",
+   :  :biography nil,
+   :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
 
 ***** single book not found
   #+NAME: not-found 
@@ -232,7 +230,7 @@
 ***** get all authors
   #+NAME: get-authors
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-  curl -sv "$API/authors"
+  curl -sv "$API/authors?limit=2&order=nickname"
   #+END_SRC
 
   #+RESULTS: get-authors
@@ -278,22 +276,17 @@
   {"message":"Not found"}
   #+end_example
 
-
 **** comments/
 ***** get all comments
   #+NAME: get-comments
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-  curl -sv "$API/comments" \
+  curl -sv "$API/comments?limit=2" \
        -H  "Accept: text/plain"
   #+END_SRC
 
   #+RESULTS: get-comments
-  : ({:id 1, :message "love books about dbs and this one especially"}
-  :  {:id 2, :message "mee too"}
-  :  {:id 3, :message "lets learn db"}
-  :  {:id 4, :message "who is psyho here?"}
-  :  {:id 5, :message "i feel pain - fix it"}
-  :  {:id 6, :message "much better name - stop it"})
+  : ({:id 2, :message "mee too"}
+  :  {:id 1, :message "love books about dbs and this one especially"})
 
 ***** get whole comment
   #+NAME: get-comment

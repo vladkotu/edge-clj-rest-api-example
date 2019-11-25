@@ -26,9 +26,9 @@
   (authors/select-by-id @db-conn {:id id}))
 
 (defmethod select :authors
-  [_]
+  [{:keys [query]}]
   (log/info ::select.authors " db method called")
-  (authors/select-all @db-conn))
+  (authors/select-all @db-conn query))
 
 (defmethod select :author
   [{:keys [id]}]
@@ -36,8 +36,9 @@
   (authors/select-by-id @db-conn {:id id}))
 
 (defmethod select :comments
-  [_]
-  (comments/select-all @db-conn))
+  [{:keys [query]}]
+  (log/info ::select.comments " db method called" query)
+  (comments/select-all @db-conn query))
 
 (defmethod select :comment
   [{:keys [id]}]
