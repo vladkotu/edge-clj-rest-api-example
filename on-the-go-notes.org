@@ -408,6 +408,29 @@
  :   {:id 2, :message "mee too"}
  :   {:id 1, :message "love books about dbs and this one especially"})}
 
+**** insert if not exists
+ #+name: insert-if-not-exists
+ #+header: :engine postgresql
+ #+header: :dbhost localhost
+ #+header: :dbport 54320
+ #+header: :dbuser vladkotu
+ #+header: :dbpassword pwd123
+ #+header: :database blog_db
+ #+begin_src sql
+INSERT
+INTO
+	books (title, author_id)
+SELECT
+	'Copy book', 2
+WHERE
+	NOT EXISTS(SELECT 1 FROM books WHERE title = 'Copy book' AND author_id = 2)   -- VALUES ('Copy book', 2);
+
+
+ #+end_src
+
+ #+RESULTS: insert-if-not-exists
+ | INSERT 0 0 |
+ |------------|
 
 ** Quiz
 *** How to write to STDOUT but not only to logs?
