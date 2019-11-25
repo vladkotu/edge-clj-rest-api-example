@@ -13,7 +13,6 @@
 
  :ig/system
  {:wiz.blog.api.db/db-spec #ref [:db]
-  :wiz.blog.api.core/root  "Hello, api!"
 
   [:wiz.blog.api.core/items-list :blog.api/books]
   {:resource/options {:description "List of Books"}}
@@ -38,8 +37,7 @@
    :basePath "v1/"
    :routes
    [["v1"
-     [["/" [["" #ig/ref :wiz.blog.api.core/root]
-            ["books" #ig/ref :blog.api/books]
+     [["/" [["books" #ig/ref :blog.api/books]
             [["books/" :id] #ig/ref :blog.api/book]
             ["authors" #ig/ref :blog.api/authors]
             [["authors/" :id] #ig/ref :blog.api/author]

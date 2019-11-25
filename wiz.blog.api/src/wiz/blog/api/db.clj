@@ -2,7 +2,6 @@
   (:require
    [integrant.core :as ig]
    [clojure.tools.logging :as log]
-
    [wiz.blog.api.db.books :as books]
    [wiz.blog.api.db.authors :as authors]
    [wiz.blog.api.db.comments :as comments]))
@@ -17,21 +16,23 @@
 (defmulti select :entity)
 
 (defmethod select :books
-  [_]
-  (->> @db-conn
-       books/select-all
-       (sort-by :title)))
+  [{:keys [query]}]
+  (log/info ::select.books " db method called" query)
+  (books/select-all @db-conn query))
 
 (defmethod select :book
   [{:keys [id]}]
+  (log/info ::select.book " db method called")
   (authors/select-by-id @db-conn {:id id}))
 
 (defmethod select :authors
   [_]
+  (log/info ::select.authors " db method called")
   (authors/select-all @db-conn))
 
 (defmethod select :author
   [{:keys [id]}]
+  (log/info ::select.author " db method called")
   (authors/select-by-id @db-conn {:id id}))
 
 (defmethod select :comments

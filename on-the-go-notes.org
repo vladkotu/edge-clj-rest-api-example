@@ -1,7 +1,5 @@
 # -*- org-confirm-babel-evaluate: nil -*-
-* Notes on the go
-excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
-
+* Notes on the go excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
 ** API
 
 *** URI schema
@@ -183,33 +181,33 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   #+END_SRC
 
   #+RESULTS: get-books
-  : ({:id 5, :title "Awareness"}
-  :  {:id 1, :title "Db Book of all Books"}
-  :  {:id 4, :title "Event logigns in s UI systems"}
+  : ({:id 1, :title "Db Book of all Books"}
   :  {:id 2, :title "Psyho Self control"}
-  :  {:id 3, :title "RDBMS coockbook"})
+  :  {:id 3, :title "RDBMS coockbook"}
+  :  {:id 4, :title "Event logigns in s UI systems"}
+  :  {:id 5, :title "Awareness"})
 
 ***** get whole book
   #+NAME: get-book 
   #+begin_src sh :results verbatim
     # exec 2>&1
-    curl -vs "${API}/books/1" \
+    curl -vs "${API}/books/2" \
          -H 'Accept: text/plain, application/edn;q=0.9'
   #+end_src
 
   #+RESULTS: get-book
-  : {:id 1,
-  :  :name "Vlad",
-  :  :email "vald@kot.com",
-  :  :nickname "vladkotu",
+  : {:id 2,
+  :  :name "Ivan",
+  :  :email "ivan@ttt.com",
+  :  :nickname "ivanko",
   :  :biography nil,
-  :  :created_at #inst "2019-11-19T12:15:28.084882000-00:00"}
+  :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
 
 ***** single book not found
   #+NAME: not-found 
   #+begin_src sh :results verbatim
     # exec 2>&1
-    curl -vsi "${API}/books/0" \
+    curl -vsi "${API}/books/1000" \
          -H 'Accept: application/edn;q=0.9'
   #+end_src
 
@@ -221,11 +219,11 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   X-Content-Type-Options: nosniff
   Content-Length: 23
   Content-Type: application/edn
-  Last-Modified: Thu, 21 Nov 2019 17:59:40 GMT
+  Last-Modified: Mon, 25 Nov 2019 12:31:47 GMT
   Vary: accept
   Server: Aleph/0.4.4
   Connection: Keep-Alive
-  Date: Thu, 21 Nov 2019 17:59:57 GMT
+  Date: Mon, 25 Nov 2019 12:34:13 GMT
   
   {:message "Not found"}
   #+end_example
@@ -259,7 +257,7 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
 ***** single author not found
   #+NAME: author-not-found
   #+BEGIN_SRC shell :results verbatim
-  curl -svi "$API/authors/0" \
+  curl -svi "$API/authors/1000" \
        -H   "Accept: application/json"
   #+END_SRC
 
@@ -271,11 +269,11 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   X-Content-Type-Options: nosniff
   Content-Length: 24
   Content-Type: application/json
-  Last-Modified: Thu, 21 Nov 2019 18:00:25 GMT
+  Last-Modified: Mon, 25 Nov 2019 12:31:47 GMT
   Vary: accept
   Server: Aleph/0.4.4
   Connection: Keep-Alive
-  Date: Thu, 21 Nov 2019 18:00:48 GMT
+  Date: Mon, 25 Nov 2019 12:35:01 GMT
   
   {"message":"Not found"}
   #+end_example
@@ -286,11 +284,16 @@ excellent source of knowledge https://github.com/dharrigan/nextjdbc-integrant
   #+NAME: get-comments
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
   curl -sv "$API/comments" \
-       -H  "Accept: application/json"
+       -H  "Accept: text/plain"
   #+END_SRC
 
   #+RESULTS: get-comments
-  : [{"id":1,"message":"love books about dbs and this one especially"},{"id":2,"message":"mee too"},{"id":3,"message":"lets learn db"},{"id":4,"message":"who is psyho here?"},{"id":5,"message":"i feel pain - fix it"},{"id":6,"message":"much better name - stop it"}]
+  : ({:id 1, :message "love books about dbs and this one especially"}
+  :  {:id 2, :message "mee too"}
+  :  {:id 3, :message "lets learn db"}
+  :  {:id 4, :message "who is psyho here?"}
+  :  {:id 5, :message "i feel pain - fix it"}
+  :  {:id 6, :message "much better name - stop it"})
 
 ***** get whole comment
   #+NAME: get-comment

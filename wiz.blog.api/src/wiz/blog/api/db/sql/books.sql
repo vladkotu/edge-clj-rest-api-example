@@ -33,7 +33,12 @@ update books set
 where id = :id
 
 -- :name select-all :? :*
-SELECT id, title from books order by created_at
+SELECT id, title
+FROM books
+--~ (when (:author params) "WHERE author_id=:author")
+--~ (if (:order params) "ORDER BY :order" "ORDER BY created_at")
+--~ (when (:limit params) "LIMIT :limit")
+
 
 -- :name select-by-id :? :1
 SELECT * FROM books WHERE id = :id
