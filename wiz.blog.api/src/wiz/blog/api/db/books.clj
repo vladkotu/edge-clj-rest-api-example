@@ -9,7 +9,7 @@
 (do
   (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
 (do
-  (let [query {:title "2 ololo" :author-id 3}]
+  (let [query {:title "Copy book v11" :author-id 3}]
     (insert-distinct-entity @db query)))
 
 (comment

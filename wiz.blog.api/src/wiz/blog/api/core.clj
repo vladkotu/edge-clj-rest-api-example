@@ -26,8 +26,14 @@
 (def Int schema/Int)
 (def IntPos (schema/both Int (schema/pred pos? 'pos?)))
 (schema/defschema Book
-  {:title String
+  {:title     String
    :author-id IntPos})
+
+(schema/defschema Author
+  {:name      String
+   :email     String
+   :nickname  (schema/maybe String)
+   :biography (schema/maybe String)})
 
 ;;;;;;;;;;;;;;;
 ;; Resources ;;
@@ -52,12 +58,16 @@
 
 (def resource-errors
   {:blog.api/books
-   {:already-exists "Cannot create book as it's already exists."}})
+   {:already-exists "Cannot create book as it's already exists."}
+   :blog.api/authors
+   {:already-exists "Cannot create author as it's already exists."}})
 
 (def resources-config
   {:blog.api/books
    {[:methods :get :parameters :query (schema/optional-key :author)] #(or % IntPos)
-    [:methods :post :parameters :body] #(or % Book)}})
+    [:methods :post :parameters :body] #(or % Book)}
+   :blog.api/authors
+   {[:methods :post :parameters :body] #(or % Author)}})
 
 (defn update-resources [resource-model config]
   (loop [paths (keys config)
@@ -76,31 +86,6 @@
     (update-resources resource-model config)
     resource-model))
 
-(defmethod ig/init-key ::item-blob
-  [[_ id] _]
-  (log/info ::item-blob " initialized")
-  (yada/resource
-   (->
-    {:id         id
-     :parameters {:path {:id IntPos}}
-     :methods
-     {:get
-      {:response
-       (fn [ctx]
-         (log/info ::item-blob.get.response " handler started")
-         (let [data   (db/select {:entity (keyword (name id))
-                                  :id     (-> ctx :parameters :path :id)})
-               result (if (nil? data)
-                        (-> (:response ctx)
-                            (assoc :status 404)
-                            (assoc :body {:message "Not found"}))
-                        data)]
-           (case (yada/content-type ctx)
-             "text/plain" (with-out-str (clojure.pprint/pprint result))
-             result)))}}}
-    extend-with-common-resource-options
-    extend-with-resource-options)))
-
 (defn entity-id [ctx]
   (keyword (name (:id ctx))))
 
@@ -112,6 +97,19 @@
       "text/plain" (with-out-str (clojure.pprint/pprint result))
       result)))
 
+(defn get-entity [ctx]
+  (log/info ::item-blob.get.response " handler started")
+  (let [data   (db/select {:entity (entity-id ctx)
+                           :id     (-> ctx :parameters :path :id)})
+        result (if (nil? data)
+                 (-> (:response ctx)
+                     (assoc :status 404)
+                     (assoc :body {:message "Not found"}))
+                 data)]
+    (case (yada/content-type ctx)
+      "text/plain" (with-out-str (clojure.pprint/pprint result))
+      result)))
+
 (defn create-new-entity [ctx]
   (let [body   (-> ctx :parameters :body)
         result (db/insert {:entity (entity-id ctx)
@@ -119,8 +117,21 @@
     (if (nil? result)
       (-> (:response ctx)
           (assoc :status 400)
-          (assoc :body {:message (get resource-errors (:id ctx))}))
+          (assoc :body {:message (get-in resource-errors [(:id ctx) :already-exists])}))
       result)))
+
+(defmethod ig/init-key ::item-blob
+  [[_ id] _]
+  (log/info ::item-blob " initialized")
+  (yada/resource
+   (->
+    {:id         id
+     :parameters {:path {:id IntPos}}
+     :methods
+     {:get
+      {:response get-entity}}}
+    extend-with-common-resource-options
+    extend-with-resource-options)))
 
 (defmethod ig/init-key ::items-list
   [[_ id] _]

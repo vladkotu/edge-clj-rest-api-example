@@ -11,6 +11,18 @@ CREATE TABLE IF NOT EXISTS authors (
 -- :name drop-table :!
 DROP TABLE IF EXISTS authors
 
+-- :name insert-distinct-entity :? :1
+INSERT
+INTO
+authors (name, email, nickname, biography)
+SELECT
+  :name, :email, :nickname, :biography
+WHERE
+  NOT EXISTS(
+    SELECT 1 FROM authors WHERE email = :email
+  )
+RETURNING id, name, email, nickname, biography, created_at
+
 -- :name insert-entity :! :n
 INSERT INTO authors (name, email, nickname, biography)
   VALUES (:name,  :email, :nickname, :biography)

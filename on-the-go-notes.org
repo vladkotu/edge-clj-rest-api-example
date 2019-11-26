@@ -172,7 +172,7 @@
   #function[yada.interceptors/return]],
  :parameters {:path {:id "2"}}}
 #+end_src      
-***** get all books   
+***** get all books
   #+NAME: get-books
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
   curl -sv "$API/books?order=id"
@@ -252,7 +252,7 @@
   :  {:id 2, :name "Ivan", :nickname "ivanko", :email "ivan@ttt.com"}
   :  {:id 3, :name "Svetlana", :nickname "svenlo", :email "svet@ttt.com"})
 
-***** get whole author
+***** author: authors/{id}
   #+NAME: get-author
   #+BEGIN_SRC shell :results verbatim
   curl -sv "$API/authors/3"
@@ -266,7 +266,7 @@
   :  :biography nil,
   :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
 
-***** single author not found
+***** author not found
   #+NAME: author-not-found
   #+BEGIN_SRC shell :results verbatim
   curl -svi "$API/authors/1000" \
@@ -289,6 +289,41 @@
   
   {"message":"Not found"}
   #+end_example
+  
+***** create author
+   #+NAME: create-author 
+   #+begin_src sh :results verbatim
+     # exec 2>&1
+     curl -X POST -vsi "${API}/authors" \
+          -H 'Accept: text/plain, application/edn;q=0.9' \
+          -H 'Content-Type: application/edn'             \
+          -d '{:name "Li2" :email "li2@bisss.com" :nickname "L" :biography nil}'
+  #+end_src
+
+  #+RESULTS: create-author
+  #+begin_example
+  HTTP/1.1 200 OK
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Content-Length: 139
+  Content-Type: text/plain
+  Last-Modified: Tue, 26 Nov 2019 13:10:41 GMT
+  Vary: accept
+  Server: Aleph/0.4.4
+  Connection: Keep-Alive
+  Date: Tue, 26 Nov 2019 13:11:47 GMT
+  
+  {:id 6,
+   :name "Li2",
+   :email "li2@bisss.com",
+   :nickname "L",
+   :biography nil,
+   :created_at #inst "2019-11-26T13:11:47.628707000-00:00"}
+
+  #+end_example
+
+
 
 **** comments/
 ***** get all comments

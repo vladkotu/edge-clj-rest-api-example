@@ -49,5 +49,10 @@
 
 (defmethod insert :books
   [{:keys [body]}]
-  (log/info ::insert.books " db method called" :query body)
+  (log/info ::insert.books " db method called" :body body)
   (books/insert-distinct-entity @db-conn body))
+
+(defmethod insert :authors
+  [{:keys [body]}]
+  (log/info ::insert.authors " db method called" :body body)
+  (authors/insert-distinct-entity @db-conn body))
