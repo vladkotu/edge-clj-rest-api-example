@@ -61,3 +61,20 @@
   [{:keys [body]}]
   (log/info ::insert.comments " db method called" :body body)
   (comments/insert-entity @db-conn body))
+
+(defmulti delete :entity)
+
+(defmethod delete :book
+  [{:keys [id]}]
+  (log/info ::delete.book " db method called" :id id)
+  (books/delete-entity @db-conn {:id id}))
+
+(defmethod delete :authors
+  [{:keys [id]}]
+  (log/info ::delete.authors " db method called" :id id)
+  (authors/delete-entity @db-conn {:id id}))
+
+(defmethod delete :comments
+  [{:keys [id]}]
+  (log/info ::delete.comments " db method called" :id id)
+  (comments/delete-entity @db-conn {:id id}))

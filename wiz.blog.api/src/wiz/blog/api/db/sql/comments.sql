@@ -44,3 +44,6 @@ FROM comments
 
 -- :name select-by-id :? :1
 SELECT * FROM comments WHERE id = :id
+
+-- :name delete-entity :! :n
+DELETE from comments WHERE id = :id

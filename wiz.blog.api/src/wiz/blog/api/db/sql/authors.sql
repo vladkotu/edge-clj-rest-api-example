@@ -55,5 +55,8 @@ FROM authors
 -- :name select-by-email :? :1
 SELECT * FROM authors WHERE email = :email
 
-  -- :name select-by-id :? :1
+-- :name select-by-id :? :1
 SELECT * FROM authors WHERE id = :id
+
+-- :name delete-entity :! :n
+DELETE from authors WHERE id = :id

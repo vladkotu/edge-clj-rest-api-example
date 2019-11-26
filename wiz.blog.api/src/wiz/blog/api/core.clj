@@ -95,6 +95,11 @@
     (update-resources resource-model config)
     resource-model))
 
+(defn http-error [ctx status code]
+  (-> (:response ctx)
+      (assoc :status status)
+      (assoc :body {:message (get-in resource-errors [(:id ctx) code] (name code))})))
+
 (defn entity-id [ctx]
   (keyword (name (:id ctx))))
 
@@ -107,38 +112,39 @@
       result)))
 
 (defn get-entity [ctx]
-  (log/info ::item-blob.get.response " handler started")
   (let [data   (db/select {:entity (entity-id ctx)
                            :id     (-> ctx :parameters :path :id)})
         result (if (nil? data)
-                 (-> (:response ctx)
-                     (assoc :status 404)
-                     (assoc :body {:message "Not found"}))
+                 (http-error ctx 404 :not-found)
                  data)]
     (case (yada/content-type ctx)
       "text/plain" (with-out-str (clojure.pprint/pprint result))
       result)))
+
+(defn delete-entity [ctx]
+  (let [result (db/delete {:entity (entity-id ctx)
+                           :id     (-> ctx :parameters :path :id)})]
+    (if (zero? result)
+      (http-error ctx 404 :not-exists)
+      {:message "Deleted"})))
 
 (defn create-new-entity [ctx]
   (let [body   (-> ctx :parameters :body)
         result (db/insert {:entity (entity-id ctx)
                            :body   body})]
     (if (nil? result)
-      (-> (:response ctx)
-          (assoc :status 400)
-          (assoc :body {:message (get-in resource-errors [(:id ctx) :already-exists])}))
+      (http-error ctx 400 :already-exists)
       result)))
 
 (defmethod ig/init-key ::item-blob
   [[_ id] _]
-  (log/info ::item-blob " initialized")
   (yada/resource
    (->
     {:id         id
      :parameters {:path {:id IntPos}}
      :methods
-     {:get
-      {:response get-entity}}}
+     {:get    {:response get-entity}
+      :delete {:response delete-entity}}}
     extend-with-common-resource-options
     extend-with-resource-options)))
 

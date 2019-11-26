@@ -54,3 +54,6 @@ FROM books
 
 -- :name select-by-id :? :1
 SELECT * FROM books WHERE id = :id
+
+-- :name delete-entity :! :n
+DELETE from books WHERE id = :id
