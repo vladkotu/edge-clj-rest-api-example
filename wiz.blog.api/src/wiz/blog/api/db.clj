@@ -56,3 +56,8 @@
   [{:keys [body]}]
   (log/info ::insert.authors " db method called" :body body)
   (authors/insert-distinct-entity @db-conn body))
+
+(defmethod insert :comments
+  [{:keys [body]}]
+  (log/info ::insert.comments " db method called" :body body)
+  (comments/insert-entity @db-conn body))

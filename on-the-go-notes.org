@@ -320,11 +320,7 @@
    :nickname "L",
    :biography nil,
    :created_at #inst "2019-11-26T13:11:47.628707000-00:00"}
-
   #+end_example
-
-
-
 **** comments/
 ***** get all comments
   #+NAME: get-comments
@@ -337,7 +333,7 @@
   : ({:id 2, :message "mee too"}
   :  {:id 1, :message "love books about dbs and this one especially"})
 
-***** get whole comment
+***** comment: comments/{id}
   #+NAME: get-comment
   #+BEGIN_SRC shell :results verbatim
   curl -sv "$API/comments/3"
@@ -349,8 +345,26 @@
   :  :author_id 3,
   :  :book_id 1,
   :  :created_at #inst "2019-11-19T20:20:42.790065000-00:00"}
+ 
+***** create comment
+  #+NAME: create-comment
+  #+BEGIN_SRC shell :results verbatim
+  # exec 2>&1
+  curl -X POST -vs "${API}/comments"                \
+      -H 'Accept: text/plain, application/edn;q=0.9' \
+      -H 'Content-Type: application/edn'             \
+      -d '{:message "char from curl" :author-id 2 :book-id 1}'
+  #+END_SRC
 
-***** single comment not found
+  #+RESULTS: create-comment
+  : {:id 10,
+  :  :message "char from curl",
+  :  :author_id 2,
+  :  :book_id 1,
+  :  :created_at #inst "2019-11-26T14:06:30.855153000-00:00"}
+  : 
+
+***** comment not found
   #+NAME: comment-not-found
   #+BEGIN_SRC shell :results verbatim
   curl -svi "$API/comments/0" \

@@ -7,6 +7,8 @@
 (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/comments.sql")
 
 (comment (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
+(comment (let [body {:message "message from the repl" :author-id 2 :book-id 1}]
+           (insert-entity @db body)))
 (comment
   (let [query {:order "id"}]
     (select-all db query)

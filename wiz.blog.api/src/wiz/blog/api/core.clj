@@ -35,6 +35,11 @@
    :nickname  (schema/maybe String)
    :biography (schema/maybe String)})
 
+(schema/defschema Comment
+  {:message   String
+   :author-id IntPos
+   :book-id   IntPos})
+
 ;;;;;;;;;;;;;;;
 ;; Resources ;;
 ;;;;;;;;;;;;;;;
@@ -60,14 +65,18 @@
   {:blog.api/books
    {:already-exists "Cannot create book as it's already exists."}
    :blog.api/authors
-   {:already-exists "Cannot create author as it's already exists."}})
+   {:already-exists "Cannot create author as it's already exists."}
+   :blog.api/comments
+   {:already-exists "Cannot create comment as it's already exists."}})
 
 (def resources-config
   {:blog.api/books
    {[:methods :get :parameters :query (schema/optional-key :author)] #(or % IntPos)
     [:methods :post :parameters :body] #(or % Book)}
    :blog.api/authors
-   {[:methods :post :parameters :body] #(or % Author)}})
+   {[:methods :post :parameters :body] #(or % Author)}
+   :blog.api/comments
+   {[:methods :post :parameters :body] #(or % Comment)}})
 
 (defn update-resources [resource-model config]
   (loop [paths (keys config)

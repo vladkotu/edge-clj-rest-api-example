@@ -10,9 +10,10 @@ CREATE TABLE IF NOT EXISTS comments (
 -- :name drop-table :!
 DROP TABLE IF EXISTS comments
 
--- :name insert-entity :! :n
+-- :name insert-entity :? :1
 INSERT INTO comments (message, author_id, book_id)
 VALUES (:message, :author-id, :book-id)
+RETURNING id, message, author_id, book_id, created_at
 
 -- :name insert-list-entities :! :n
 INSERT INTO comments (message, author_id, book_id)
