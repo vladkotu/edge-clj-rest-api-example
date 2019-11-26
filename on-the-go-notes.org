@@ -18,7 +18,6 @@
     :END:
 
 **** books/
- 
 ***** ctx obj dump
 #+begin_src clojure
 {:response
@@ -176,31 +175,47 @@
 ***** get all books   
   #+NAME: get-books
   #+BEGIN_SRC shell :var uri="${API}" :results verbatim :cache no
-  curl -sv "$API/books?limit=3&order=title"
+  curl -sv "$API/books?order=id"
   #+END_SRC
 
   #+RESULTS: get-books
-  : ({:id 5, :title "Awareness"}
-  :  {:id 1, :title "Db Book of all Books"}
-  :  {:id 4, :title "Event logigns in s UI systems"})
-***** bool: books/{id} 
+  : ({:id 1, :title "Db Book of all Books"}
+  :  {:id 2, :title "Psyho Self control"}
+  :  {:id 3, :title "RDBMS coockbook"}
+  :  {:id 4, :title "Event logigns in s UI systems"}
+  :  {:id 5, :title "Awareness"}
+  :  {:id 6, :title "Cookbook v1"})
+***** book: books/{id} 
 ****** get book
    #+NAME: get-book 
    #+begin_src sh :results verbatim
      # exec 2>&1
-     curl -vs "${API}/books/2" \
+     curl -vs "${API}/books/1" \
           -H 'Accept: text/plain, application/edn;q=0.9'
    #+end_src
 
    #+RESULTS: get-book
-   : {:id 2,
-   :  :name "Ivan",
-   :  :email "ivan@ttt.com",
-   :  :nickname "ivanko",
+   : {:id 1,
+   :  :name "Vlad",
+   :  :email "vald@kot.com",
+   :  :nickname "vladkotu",
    :  :biography nil,
-   :  :created_at #inst "2019-11-19T12:22:11.680514000-00:00"}
+   :  :created_at #inst "2019-11-19T12:15:28.084882000-00:00"}
+****** create book
+   #+NAME: create-book 
+   #+begin_src sh :results verbatim
+     # exec 2>&1
+     curl -X POST -vs "${API}/books" \
+          -H 'Accept: text/plain, application/edn;q=0.9' \
+          -H 'Content-Type: application/edn'             \
+          -d '{:title "Cookbook v2" :author-id 2}'
+  #+end_src
 
-***** single book not found
+   #+RESULTS: create-book
+   : {:message "Entity already exists"}
+   : 
+
+***** not found
   #+NAME: not-found 
   #+begin_src sh :results verbatim
     # exec 2>&1
@@ -407,8 +422,20 @@
  :   {:id 3, :message "lets learn db"}
  :   {:id 2, :message "mee too"}
  :   {:id 1, :message "love books about dbs and this one especially"})}
-
+ 
 **** insert if not exists
+
+ #+name: insert-if-not-exists
+ #+header: :engine postgresql
+ #+header: :dbhost localhost
+ #+header: :dbport 54320
+ #+header: :dbuser vladkotu
+ #+header: :dbpassword pwd123
+ #+header: :database blog_db
+ #+begin_src sql
+DELETE from books WHERE id > 6
+ #+end_src
+
  #+name: insert-if-not-exists
  #+header: :engine postgresql
  #+header: :dbhost localhost
@@ -421,16 +448,16 @@ INSERT
 INTO
 	books (title, author_id)
 SELECT
-	'Copy book', 2
+	'Copy book v2', 2
 WHERE
-	NOT EXISTS(SELECT 1 FROM books WHERE title = 'Copy book' AND author_id = 2)   -- VALUES ('Copy book', 2);
-
+	NOT EXISTS(SELECT 1 FROM books WHERE title = 'Copy book v2' AND author_id = 2)   -- VALUES ('Copy book', 2);
+RETURNING id, title
 
  #+end_src
 
  #+RESULTS: insert-if-not-exists
- | INSERT 0 0 |
- |------------|
+ | DELETE 18 |
+ |-----------|
 
 ** Quiz
 *** How to write to STDOUT but not only to logs?

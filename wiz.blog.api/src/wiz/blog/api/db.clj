@@ -44,3 +44,10 @@
   [{:keys [id]}]
   (log/info ::select.comment" db method called" :id id)
   (comments/select-by-id @db-conn {:id id}))
+
+(defmulti insert :entity)
+
+(defmethod insert :books
+  [{:keys [body]}]
+  (log/info ::insert.books " db method called" :query body)
+  (books/insert-distinct-entity @db-conn body))

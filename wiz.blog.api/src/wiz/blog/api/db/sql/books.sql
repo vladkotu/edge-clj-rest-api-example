@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS books
 INSERT INTO books (title, author_id)
   VALUES (:title, :author-id)
 
--- :name insert-distinct-entity :! :n
+-- :name insert-distinct-entity :? :1
 INSERT
 INTO
   books (title, author_id)
@@ -23,6 +23,7 @@ WHERE
   NOT EXISTS(
     SELECT 1 FROM books WHERE title = :title AND author_id = :author-id
   )
+RETURNING id, title, author_id, created_at
 
 -- :name insert-list-entities :! :n
 INSERT INTO books (title, author_id)

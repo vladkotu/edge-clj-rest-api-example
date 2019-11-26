@@ -7,8 +7,10 @@
    [wiz.blog.api.db :as db]
    [integrant.core :as ig]))
 
+;;;;;;;;;;;
+;; Tools ;;
+;;;;;;;;;;;
 ;; (set! *print-namespace-maps* false)
-
 (defn pps [& xs]
   (for [x xs]
     (with-out-str
@@ -18,31 +20,60 @@
   (for [x xs]
     (clojure.pprint/pprint x)))
 
-(defn extend-with-common-resource-options [resource-model]
-  (-> resource-model
-      (update-in [:produces] #(conj (or % []) {:media-type
-                                               #{"text/plain;q=0.9"
-                                                 "application/edn;q=0.7"
-                                                 "application/json;q=0.8"}}))
-      (assoc-in [:properties :last-modified]
-                (new java.util.Date))))
-
+;;;;;;;;;;;;;
+;; Schemes ;;
+;;;;;;;;;;;;;
 (def Int schema/Int)
 (def IntPos (schema/both Int (schema/pred pos? 'pos?)))
+(schema/defschema Book
+  {:title String
+   :author-id IntPos})
 
-(def resources
+;;;;;;;;;;;;;;;
+;; Resources ;;
+;;;;;;;;;;;;;;;
+(def common-resources-config
+  {[:consumes]
+   #(conj (or % [])
+          {:media-type
+           #{"application/x-www-form-urlencoded"
+             "application/edn;q=0.7"
+             "application/json;q=0.8"}})
+
+   [:produces]
+   #(conj (or % [])
+          {:media-type
+           #{"text/plain;q=0.9"
+             "application/edn;q=0.7"
+             "application/json;q=0.8"}})
+
+   [:properties :last-modified]
+   #(or % (new java.util.Date))})
+
+(def resource-errors
   {:blog.api/books
-   {[:methods :get :parameters :query (schema/optional-key :author)] #(or % IntPos)}})
+   {:already-exists "Cannot create book as it's already exists."}})
+
+(def resources-config
+  {:blog.api/books
+   {[:methods :get :parameters :query (schema/optional-key :author)] #(or % IntPos)
+    [:methods :post :parameters :body] #(or % Book)}})
+
+(defn update-resources [resource-model config]
+  (loop [paths (keys config)
+         res   resource-model]
+    (if (empty? paths)
+      res
+      (recur
+       (rest paths)
+       (update-in res (first paths) (get config (first paths)))))))
+
+(defn extend-with-common-resource-options [resource-model]
+  (update-resources resource-model common-resources-config))
 
 (defn extend-with-resource-options [resource-model]
-  (if-let [resource-config (get resources (:id resource-model))]
-    (loop [paths (keys resource-config)
-           res   resource-model]
-      (if (empty? paths)
-        res
-        (recur
-         (rest paths)
-         (update-in res (first paths) (get resource-config (first paths))))))
+  (if-let [config (get resources-config (:id resource-model))]
+    (update-resources resource-model config)
     resource-model))
 
 (defmethod ig/init-key ::item-blob
@@ -70,23 +101,37 @@
     extend-with-common-resource-options
     extend-with-resource-options)))
 
+(defn entity-id [ctx]
+  (keyword (name (:id ctx))))
+
+(defn get-list-of-entities [ctx]
+  (let [query  (-> ctx :parameters :query)
+        result (db/select {:entity (entity-id ctx)
+                           :query  (or query {})})]
+    (case (yada/content-type ctx)
+      "text/plain" (with-out-str (clojure.pprint/pprint result))
+      result)))
+
+(defn create-new-entity [ctx]
+  (let [body   (-> ctx :parameters :body)
+        result (db/insert {:entity (entity-id ctx)
+                           :body   body})]
+    (if (nil? result)
+      (-> (:response ctx)
+          (assoc :status 400)
+          (assoc :body {:message (get resource-errors (:id ctx))}))
+      result)))
+
 (defmethod ig/init-key ::items-list
   [[_ id] _]
   (yada/resource
    (->
     {:id id
      :methods
-     {:get
-      {:parameters {:query {(schema/optional-key :order) schema/Str
-                            (schema/optional-key :limit) IntPos}}
-       :response
-       (fn [ctx]
-         (let [query  (-> ctx :parameters :query)
-               result (db/select {:entity (keyword (name id))
-                                  :query  (or query {})})]
-           (case (yada/content-type ctx)
-             "text/plain" (with-out-str (clojure.pprint/pprint result))
-             result)))}}}
+     {:post {:response create-new-entity}
+      :get  {:parameters {:query {(schema/optional-key :order) schema/Str
+                                  (schema/optional-key :limit) IntPos}}
+             :response   get-list-of-entities}}}
     extend-with-common-resource-options
     extend-with-resource-options)))
 
