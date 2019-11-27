@@ -1,0 +1,6 @@
+{:revolt.migrations.task/flyway
+ {:jdbc-url  "jdbc:postgresql://localhost:54320/blog_db"
+  :locations ["db/migrations/postrgres"]
+  :user      "vladkotu"
+  :password  "pwd123"
+  :action    :info}}

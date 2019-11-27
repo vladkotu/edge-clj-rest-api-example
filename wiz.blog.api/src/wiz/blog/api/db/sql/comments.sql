@@ -1,15 +1,3 @@
--- :name create-table :!
-CREATE TABLE IF NOT EXISTS comments (
-  id serial PRIMARY KEY,
-  message varchar,
-  author_id INT,
-  book_id INT,
-  created_at timestamp NOT NULL default current_timestamp
-)
-
--- :name drop-table :!
-DROP TABLE IF EXISTS comments
-
 -- :name insert-entity :? :1
 INSERT INTO comments (message, author_id, book_id)
 VALUES (:message, :author-id, :book-id)

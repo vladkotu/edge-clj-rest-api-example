@@ -1,16 +1,3 @@
--- :name create-table :!
-CREATE TABLE IF NOT EXISTS authors (
-  id serial PRIMARY KEY,
-  name varchar,
-  email varchar(120) UNIQUE,
-  nickname varchar(80) NOT NULL,
-  biography text,
-  created_at timestamp NOT NULL default current_timestamp
-)
-
--- :name drop-table :!
-DROP TABLE IF EXISTS authors
-
 -- :name insert-distinct-entity :? :1
 INSERT
 INTO

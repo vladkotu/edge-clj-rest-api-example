@@ -1,14 +1,3 @@
--- :name create-table :!
-CREATE TABLE IF NOT EXISTS books (
-  id serial PRIMARY KEY,
-  title varchar,
-  author_id INT,
-  created_at timestamp NOT NULL default current_timestamp
-)
-
--- :name drop-table :!
-DROP TABLE IF EXISTS books
-
 -- :name insert-entity :! :n
 INSERT INTO books (title, author_id)
   VALUES (:title, :author-id)
