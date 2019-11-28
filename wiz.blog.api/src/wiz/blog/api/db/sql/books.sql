@@ -21,7 +21,7 @@ INSERT INTO books (title, author_id)
 -- :name update-book-title :! :n
 UPDATE books set title = :title where id = :id
 
--- :name update :! :n
+-- :name update-entity :! :n
 /* :require [clojure.string :as string]
     [hugsql.parameters :refer [identifier-param-quote]] */
 update books set

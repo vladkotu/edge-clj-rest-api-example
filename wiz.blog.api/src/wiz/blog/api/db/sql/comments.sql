@@ -10,7 +10,7 @@ VALUES :tuple*:comments
 -- :name update-comment-message :! :n
 UPDATE comments set message = :message where id = :id
 
--- :name update :! :n
+-- :name update-entity :! :n
 /* :require [clojure.string :as string]
     [hugsql.parameters :refer [identifier-param-quote]] */
 update comments set

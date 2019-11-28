@@ -21,7 +21,7 @@ INSERT INTO authors (name, email, nickname, biography)
 -- :name update-author-name :! :n
 UPDATE authors set name = :name where id = :id
 
--- :name update :! :n
+-- :name update-entity :! :n
 /* :require [clojure.string :as string]
     [hugsql.parameters :refer [identifier-param-quote]] */
 update authors set
