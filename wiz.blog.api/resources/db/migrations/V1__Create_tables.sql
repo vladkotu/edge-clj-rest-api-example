@@ -10,14 +10,14 @@ CREATE TABLE IF NOT EXISTS authors (
 CREATE TABLE IF NOT EXISTS books (
   id serial PRIMARY KEY,
   title VARCHAR,
-  author_id INT REFERENCES authors(id),
+  author_id INT REFERENCES authors(ID) ON DELETE RESTRICT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS comments (
   id serial PRIMARY KEY,
   message VARCHAR,
-  author_id INT REFERENCES authors(id),
-  book_id INT REFERENCES books(id),
+  author_id INT REFERENCES authors(ID) ON DELETE CASCADE,
+  book_id INT REFERENCES books(ID) ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

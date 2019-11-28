@@ -1,4 +1,4 @@
-{:paths ["src"]
+{:paths ["src" "resources"]
  :deps
  {org.clojure/clojure {:mvn/version "1.10.0"}
   juxt.edge/lib.app {:local/root "../lib/edge.app"}
@@ -21,14 +21,12 @@
    :extra-deps
    {juxt.edge/lib.app.dev {:local/root "../lib/edge.app.dev"}}}
 
-  :db/migrations
-  {:extra-paths ["dev" "resources"]
-   :extra-deps
-   {juxt.edge/lib.app.dev {:local/root "../lib/edge.app.dev"}
-    defunkt/revolt {:mvn/version "1.3.3"
+  :revolt-migrations
+  {:extra-deps
+   {defunkt/revolt {:mvn/version "1.3.3"
                     :exclusions [org.clojure/tools.deps.alpha]}
     defunkt/revolt-flyway-task {:mvn/version "0.3.0"}}
-   :main-opts   ["-m" "revolt.bootstrap"  "-c" "revolt.edn"]}
+   :main-opts   ["-m" "revolt.bootstrap" "-c" "revolt.edn"]}
 
   :prod
   {:extra-deps

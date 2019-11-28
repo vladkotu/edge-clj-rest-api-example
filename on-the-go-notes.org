@@ -463,29 +463,25 @@
 **** [%] migrations
      - [ ] what migration libs are exists?
 *** migrations
-#+begin_src sh :results verbatim
-  cd ./wiz.blog.api
-clj -A:db/migrations -t revolt.migrations.task/flyway:action=info
+**** runnig from cli
+ #+begin_src sh :results verbatim
+cd ./wiz.blog.api
+clj -A:dev:revolt-migrations -t revolt.migrations.task/flyway:action=info
+ #+end_src
+
+ #+RESULTS:
+ : +-----------+---------+------------------+------+---------------------+---------+
+ : | Category  | Version | Description      | Type | Installed On        | State   |
+ : +-----------+---------+------------------+------+---------------------+---------+
+ : | Versioned | 1       | Create tables    | SQL  | 2019-11-28 14:41:13 | Success |
+ : | Versioned | 2       | Insert test data | SQL  | 2019-11-28 14:42:04 | Future  |
+ : +-----------+---------+------------------+------+---------------------+---------+
+ : 
+**** running from repl
+#+begin_src sh :resulst verbatim
+clj -A:dev:migrations -p rebel
 #+end_src
-
-#+RESULTS:
-: +-----------+---------+------------------+------+---------------------+---------+
-: | Category  | Version | Description      | Type | Installed On        | State   |
-: +-----------+---------+------------------+------+---------------------+---------+
-: | Versioned | 1       | Create tables    | SQL  | 2019-11-27 17:00:08 | Success |
-: | Versioned | 2       | Insert test data | SQL  |                     | Pending |
-: +-----------+---------+------------------+------+---------------------+---------+
-: 
-
-https://github.com/mbuczko/revolt-flyway-task
-| Action   |                                                           |
-|----------+-----------------------------------------------------------|
-| info     | shows status of runned migrations                         |
-| migrate  | starts migrations from :locations (see config)            |
-| clean    | drops everything from database (except migrations table?) |
-| baseline |                                                           |
-| validate |                                                           |
-| repair   |                                                           |
+than ~(info)~ ~(migrate)~ ~(clean)~ and so on methods available in ~'migration~ namespace
 
 *** check your data with pgadmin [0%]
     - [ ] add dpage/pgadmin to docker compose
@@ -508,14 +504,13 @@ https://github.com/mbuczko/revolt-flyway-task
  #+end_src
 
  #+RESULTS: my-query
- | id | message                                      |
- |----+----------------------------------------------|
- |  6 | much better name - stop it                   |
- |  5 | i feel pain - fix it                         |
- |  4 | who is psyho here?                           |
- |  3 | lets learn db                                |
- |  2 | mee too                                      |
- |  1 | love books about dbs and this one especially |
+ | id | message               |
+ |----+-----------------------|
+ |  5 | Awesome story!!       |
+ |  4 | fix an typo at 111    |
+ |  3 | fix an typo at 21     |
+ |  2 | fix an typo at 234    |
+ |  1 | Relly like this book. |
 
  #+begin_src clojure :results pp
    (def db {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})
