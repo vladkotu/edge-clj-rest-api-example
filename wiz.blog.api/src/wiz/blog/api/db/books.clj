@@ -6,9 +6,9 @@
 ;; this should be removed in prod mode
 (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/books.sql")
 
-(do
+(comment
   (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
-(do
+(comment
   (let [query {:title "Copy book v11" :author-id 3}]
     (insert-distinct-entity @db query)))
 

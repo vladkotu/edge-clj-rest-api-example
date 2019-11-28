@@ -1,3 +1,4 @@
+-- :name insert-data :! :n
 INSERT INTO authors (name, email, nickname, biography)
 VALUES ('Vlad', 'Kot@mail.com', 'vladkot', NULL),
        ('Vik', 'vik@mail.com', 'vik', '*No sombre un suele'),

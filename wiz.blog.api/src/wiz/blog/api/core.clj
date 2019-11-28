@@ -48,15 +48,15 @@
    #(conj (or % [])
           {:media-type
            #{"application/x-www-form-urlencoded"
-             "application/edn;q=0.7"
-             "application/json;q=0.8"}})
+             "application/edn;q=0.8"
+             "application/json;q=0.9"}})
 
    [:produces]
    #(conj (or % [])
           {:media-type
-           #{"text/plain;q=0.9"
+           #{"text/plain;q=0.8"
              "application/edn;q=0.7"
-             "application/json;q=0.8"}})
+             "application/json;q=0.9"}})
 
    [:properties :last-modified]
    #(or % (new java.util.Date))})

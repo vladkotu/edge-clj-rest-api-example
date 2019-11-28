@@ -460,8 +460,8 @@
      - [X] connect form app
      - [X] create scheme
      - [X] apply scheme
-**** [%] migrations
-     - [ ] what migration libs are exists?
+**** [100%] migrations
+     - [X] what migration libs are exists?
 *** migrations
 **** runnig from cli
  #+begin_src sh :results verbatim

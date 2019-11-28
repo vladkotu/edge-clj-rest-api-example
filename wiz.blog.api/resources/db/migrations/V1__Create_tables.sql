@@ -1,3 +1,4 @@
+-- :name create-tables :! :n
 CREATE TABLE IF NOT EXISTS authors (
   id serial PRIMARY KEY,
   name VARCHAR(120),

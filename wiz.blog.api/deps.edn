@@ -28,6 +28,23 @@
     defunkt/revolt-flyway-task {:mvn/version "0.3.0"}}
    :main-opts   ["-m" "revolt.bootstrap" "-c" "revolt.edn"]}
 
+  :test
+  {:extra-paths ["test"]
+   :extra-deps
+   {com.cognitect/test-runner
+    {:git/url "https://github.com/cognitect-labs/test-runner.git"
+     :sha "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}
+    restpect {:mvn/version "0.2.1"}}
+   :main-opts ["-m" "cognitect.test-runner"]}
+
+  :repl
+  {:extra-deps
+   {nrepl {:mvn/version "0.6.0"}
+    refactor-nrepl {:mvn/version "2.5.0-SNAPSHOT"}
+    cider/cider-nrepl {:mvn/version "0.23.0-SNAPSHOT"}}
+   :main-opts ["-m" "nrepl.cmdline"
+               "--middleware" "[refactor-nrepl.middleware/wrap-refactor,cider.nrepl/cider-middleware]"]}
+
   :prod
   {:extra-deps
    {juxt.edge/lib.app.prod {:local/root "../lib/edge.app.prod"}}}}}

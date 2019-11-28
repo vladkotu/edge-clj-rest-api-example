@@ -23,7 +23,7 @@
 (defmethod select :book
   [{:keys [id]}]
   (log/info ::select.book " db method called" :id id)
-  (authors/select-by-id @db-conn {:id id}))
+  (books/select-by-id @db-conn {:id id}))
 
 (defmethod select :authors
   [{:keys [query]}]
