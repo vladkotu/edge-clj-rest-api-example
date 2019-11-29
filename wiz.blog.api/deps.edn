@@ -1,3 +1,6 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Blog/books api application ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 {:paths ["src" "resources"]
  :deps
  {org.clojure/clojure {:mvn/version "1.10.0"}
@@ -17,15 +20,18 @@
 
  :aliases
  {:dev
-  {:extra-paths ["dev"]
+  {:extra-paths ["dev" "test"]
    :extra-deps
-   {juxt.edge/lib.app.dev {:local/root "../lib/edge.app.dev"}}}
+   {juxt.edge/lib.app.dev {:local/root "../lib/edge.app.dev"}
+    restpect {:mvn/version "0.2.1"}
+    juxt.edge/test-utils {:local/root "../lib/edge.test-utils"}}}
 
   :revolt-migrations
   {:extra-deps
    {defunkt/revolt {:mvn/version "1.3.3"
                     :exclusions [org.clojure/tools.deps.alpha]}
-    defunkt/revolt-flyway-task {:mvn/version "0.3.0"}}
+    defunkt/revolt-flyway-task {:mvn/version "0.3.0"}
+    }
    :main-opts   ["-m" "revolt.bootstrap" "-c" "revolt.edn"]}
 
   :test
@@ -33,8 +39,7 @@
    :extra-deps
    {com.cognitect/test-runner
     {:git/url "https://github.com/cognitect-labs/test-runner.git"
-     :sha "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}
-    restpect {:mvn/version "0.2.1"}}
+     :sha "f7ef16dc3b8332b0d77bc0274578ad5270fbfedd"}}
    :main-opts ["-m" "cognitect.test-runner"]}
 
   :repl

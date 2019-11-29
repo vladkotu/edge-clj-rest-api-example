@@ -15,7 +15,8 @@
  {:wiz.blog.api.db/db-spec #ref [:db]
 
   [:wiz.blog.api.core/items-list :blog.api/books]
-  {:resource/options {:description "List of Books"}}
+  {:resource/options {:description "List of Books"}
+   :web              #ref [:web]}
 
   [:wiz.blog.api.core/items-list :blog.api/authors]
   {:resource/options {:description "List of Authors"}}

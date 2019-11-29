@@ -1,8 +1,9 @@
 (ns wiz.blog.api.end-to-end.authors-test
-  (:require [clojure.test :as t :refer [deftest is use-fixtures]]
-            [restpect.core :refer [created not-found ok]]
-            [restpect.json :refer [DELETE GET POST PUT]]
-            [wiz.blog.api.setup :refer [api fixture once-fixture]]))
+  (:require
+   [clojure.test :as t :refer [deftest is use-fixtures]]
+   [restpect.core :refer [created not-found ok]]
+   [restpect.json :refer [DELETE GET POST PUT]]
+   [wiz.blog.api.setup :refer [api fixture once-fixture]]))
 
 (use-fixtures :each fixture)
 (use-fixtures :once once-fixture)
@@ -10,10 +11,10 @@
 (deftest create-author
   (ok
    (POST (api "/authors")
-         {:name      "Li2"
-          :email     "li2@test.com"
-          :nickname  "L"
-          :biography nil})
+     {:name      "Li2"
+      :email     "li2@test.com"
+      :nickname  "L"
+      :biography nil})
    {:id        integer?
     :name      "Li2"
     :email     "li2@test.com"

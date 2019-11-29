@@ -7,8 +7,8 @@
 (hugsql/def-sqlvec-fns "wiz/blog/api/db/sql/authors.sql")
 
 ;; primers mostly expired as of names have been changed
-(do (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
-(do (let [body {:name "Li", :email "li@bisss.com", :nickname "L", :biography nil}]
+(comment (def db (atom {:dbtype "postgresql", :user "vladkotu", :password "pwd123", :dbname "blog_db", :port 54320, :host "localhost"})))
+(comment (let [body {:name "Li", :email "li@bisss.com", :nickname "L", :biography nil}]
            (insert-distinct-entity @db body)))
 
 (comment (authors/insert-authors

@@ -1,18 +1,19 @@
 (ns wiz.blog.api.end-to-end.comments-test
-  (:require [clojure.test :as t :refer [deftest is use-fixtures]]
-            [restpect.core :refer [created not-found ok]]
-            [restpect.json :refer [DELETE GET POST PUT]]
-            [wiz.blog.api.setup :refer [fixture api]]))
-
+  (:require
+   [clojure.test :as t :refer [deftest is use-fixtures]]
+   [restpect.core :refer [created not-found ok]]
+   [restpect.json :refer [DELETE GET POST PUT]]
+   [wiz.blog.api.setup :refer [api fixture once-fixture]]))
 
 (use-fixtures :each fixture)
+(use-fixtures :once once-fixture)
 
 (deftest create-comment
   (ok
    (POST (api "/comments")
-         {:message   "chat on tests"
-          :author-id 2
-          :book-id   1})
+     {:message   "chat on tests"
+      :author-id 2
+      :book-id   1})
    {:id        integer?
     :message   "chat on tests"
     :author_id 2

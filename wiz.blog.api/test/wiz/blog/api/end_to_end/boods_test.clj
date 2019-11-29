@@ -1,16 +1,18 @@
 (ns wiz.blog.api.end-to-end.boods-test
-  (:require [clojure.test :as t :refer [deftest is use-fixtures]]
-            [restpect.core :refer [created not-found ok]]
-            [restpect.json :refer [DELETE GET POST PUT]]
-            [wiz.blog.api.setup :refer [fixture api]]))
+  (:require
+   [clojure.test :as t :refer [deftest is use-fixtures]]
+   [restpect.core :refer [created not-found ok]]
+   [restpect.json :refer [DELETE GET POST PUT]]
+   [wiz.blog.api.setup :refer [api fixture once-fixture]]))
 
 (use-fixtures :each fixture)
+(use-fixtures :once once-fixture)
 
 (deftest create-book
   (ok
    (POST (api "/books")
-         {:title     "new test book v4"
-          :author-id 1})
+     {:title     "new test book v4"
+      :author-id 1})
    {:id integer?
     :title "new test book v4"
     :author_id 1}))

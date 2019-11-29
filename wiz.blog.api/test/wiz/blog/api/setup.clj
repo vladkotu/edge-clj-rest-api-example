@@ -1,5 +1,7 @@
 (ns wiz.blog.api.setup
   (:require
+   [clojure.tools.logging :as log]
+   [clojure.test :as t :refer [deftest is use-fixtures]]
    [wiz.blog.api.db :as db]
    [hugsql.core :as hugsql]))
 
@@ -21,7 +23,8 @@
   (try
     (f)
     (catch Throwable _)
-    (finally (setup))))
+    (finally (do (setup)
+                 (log/debug :TEST :finished "db filled with dev data")))))
 
 (defn fixture [f]
   (try
@@ -34,4 +37,3 @@
 
 (defn api [s-uri]
   (format (str "%s" s-uri) api-url))
-
