@@ -3,10 +3,9 @@
    [clojure.test :as t :refer [deftest is use-fixtures]]
    [restpect.core :refer [created not-found ok]]
    [restpect.json :refer [DELETE GET POST PUT]]
-   [wiz.blog.api.setup :refer [api fixture once-fixture]]))
+   [wiz.blog.api.setup :refer [setup-fixtures api]]))
 
-(use-fixtures :each fixture)
-(use-fixtures :once once-fixture)
+(setup-fixtures)
 
 (deftest create-book
   (ok
