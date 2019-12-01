@@ -5,5 +5,5 @@
   :password  "pwd123"
   :action    :info}
 
- :revolt.plugin/rebel {:init-ns     "revolt-migrations"
+ :revolt.plugin/rebel {:init-ns     "migrate"
                        :init-banner "run (info) or (migrate)"}}

@@ -1,0 +1,87 @@
+* REST api clj example
+This simple app aim to train construction using juxt's edge (yada) web solution
+** start up
+*** dev/testing workflow
+**** Prepare env
+#+begin_src shell
+    cd ./wiz.blog.api
+    touch .env
+    echo "\
+    PORT=5757          \
+  PROTOCOL=http      \
+  HOST=localhost     \
+  DB_USER=<db-user>  \
+  DB_PASSWORD=<db-pass> \
+  DB_NAME=<db-name>  \
+  DB_HOST=<db-host>  \
+  DB_PORT=<db-port   \
+  " >> .env
+#+end_src
+currently same info have to be repeated in [[file:wiz.blog.api/src/config.edn::{:web][config.edn]] and [[file:wiz.blog.api/resources/revolt.edn::{:jdbc-url%20"jdbc:postgresql://localhost:54320/blog_db"][revolt.edn]]
+
+**** Start db 
+    #+begin_src shell
+# start DB
+docker-compose up -d 
+#+end_src 
+**** Run migration
+***** Scheme only
+#+begin_src 
+# by default only schema applied, data seed should be thrown separately
+clj -A:dev:migrate -t revolt.migrations.task/flyway:action=migrate
+#+end_src
+***** Data seed and interactive migrations withing repl
+#+begin_src shell
+clj -A:dev:repl-migration
+#+end_src
+
+#+begin_src clojure
+(info) 
+#+end_src
+#+begin_example
++-----------+---------+---------------+------+---------------------+---------+
+| Category  | Version | Description   | Type | Installed On        | State   |
++-----------+---------+---------------+------+---------------------+---------+
+| Versioned | 1       | Create tables | SQL  | 2019-11-28 23:25:45 | Success |
++-----------+---------+---------------+------+---------------------+---------+
+#+end_example
+#+begin_src clojure
+;; Also overrides to config are possible
+(info {:locations ["db/migrations" "db/seed"]})
+#+end_src
+#+begin_example
++-----------+---------+------------------+------+---------------------+---------+
+| Category  | Version | Description      | Type | Installed On        | State   |
++-----------+---------+------------------+------+---------------------+---------+
+| Versioned | 1       | Create tables    | SQL  | 2019-11-28 23:25:45 | Success |
+| Versioned | 2       | Insert test data | SQL  |                     | Pending |
++-----------+---------+------------------+------+---------------------+---------+
+#+end_example
+
+
+
+#+begin_src clojure
+(migrate {:locations ["db/migrations" "db/seed"]})
+;; to seed db with test data
+#+end_src
+
+**** Start development
+#+begin_src 
+clj -A:dev:test:repl   
+#+end_src
+
+#+begin_src 
+M-x -> cider-connect 
+;; alternatively
+, s c ;; in Spacemacs
+#+end_src
+
+
+#+begin_src lisp
+(go)      ;; starts web server
+(reset)   ;; reset all app namespaces (like HMR on front-end)
+#+end_src
+
+**** Run end-to-end tests
+If application have been started as suggested in [[*Start development][Start development]] section
+        then it's just ~, t a~ in Spacemacs which runs ~cider-test-run-all-tests~ function underneath

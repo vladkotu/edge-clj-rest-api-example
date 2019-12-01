@@ -446,7 +446,7 @@
    and inside aero confg (secrets.edn)
    
 ** DB
-*** up and running [100%]
+*** todo list [100%]
      - [X] create docker-compose file
       [[file:wiz.blog.api/docker-compose.yml::version:%20"3"][docker-compose.yml]] 
      - [X] run container
@@ -483,13 +483,7 @@ clj -A:dev:migrations -p rebel
 #+end_src
 than ~(info)~ ~(migrate)~ ~(clean)~ and so on methods available in ~'migration~ namespace
 
-*** check your data with pgadmin [0%]
-    - [ ] add dpage/pgadmin to docker compose
-    - [ ] connect to app db
-    - [ ] restrict pgadmin to start only in dev mode
-    
 *** queries
-
 **** investigate bug with order being not applied dynamically
  #+name: my-query
  #+header: :engine postgresql
