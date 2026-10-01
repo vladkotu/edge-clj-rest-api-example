@@ -4,7 +4,7 @@
    [schema.core :as schema]
    [yada.yada :as yada]
    [yada.swagger :as swagger]
-   [wiz.blog.api.add-print :as add-print]
+   [wiz.blog.api.notify :as notify]
    [wiz.blog.api.db :as db]
    [integrant.core :as ig]))
 
@@ -182,6 +182,5 @@
 
 (defmethod ig/init-key ::root
   [_ x]
-  (yada/as-resource :x)
-  (add-print/ppp)
+  (notify/before-print)
   (yada/as-resource x))
