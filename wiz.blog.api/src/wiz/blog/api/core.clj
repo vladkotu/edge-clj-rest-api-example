@@ -5,6 +5,7 @@
    [yada.yada :as yada]
    [yada.swagger :as swagger]
    [wiz.blog.api.db :as db]
+   [wiz.blog.api.feature1 :as fff]
    [integrant.core :as ig]))
 
 ;;;;;;;;;;;
@@ -181,4 +182,5 @@
 
 (defmethod ig/init-key ::root
   [_ x]
+  (fff/foo)
   (yada/as-resource x))
