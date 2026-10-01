@@ -181,4 +181,5 @@
 
 (defmethod ig/init-key ::root
   [_ x]
+  (yada/as-resource :x)
   (yada/as-resource x))
